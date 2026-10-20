@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premium Redesign Preview</title>
+<style>
+  :root{
+    --brand:#004225; --brand-dark:#00301b; --ink:#0c231d; --mist:#f2f6f4;
+    --line:#d8e2dd; --muted:#5c6b65; --amber:#b45309;
+  }
+  *{box-sizing:border-box; margin:0;}
+  body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:#e9edeb; padding:24px;}
+  .compare{max-width:1100px; margin:0 auto 56px;}
+  .tag{display:inline-block; font-size:11px; font-weight:800; letter-spacing:1.5px; padding:5px 12px; border-radius:4px; margin-bottom:10px;}
+  .tag.cur{background:#6b7280; color:#fff;}
+  .tag.new{background:var(--brand); color:#fff;}
+  .frame{background:#fff; border:1px solid var(--line); border-radius:10px; padding:32px; margin-bottom:28px; overflow:hidden;}
+  h1,h2,h3{font-weight:700;}
+  .note{font-size:12px; color:var(--muted); font-style:italic; margin-top:10px;}
+  .divider{max-width:1100px; margin:0 auto 40px; border:none; border-top:2px dashed #b9c4bf;}
+  .big-label{max-width:1100px; margin:0 auto 14px; font-size:20px; font-weight:800;}
+
+  /* shared atoms */
+  .btn{display:inline-block; padding:12px 22px; border-radius:8px; font-size:14px; font-weight:600; text-decoration:none;}
+  .btn-g{background:var(--brand); color:#fff;}
+  .btn-w{background:#fff; color:var(--ink); border:1px solid var(--line);}
+  .btn-ow{background:#fff; color:var(--brand); font-weight:700;}
+  .chip{display:inline-block; border:1px solid var(--line); background:#fff; border-radius:999px; padding:5px 12px; font-size:12px;}
+  .field{display:block; width:100%; height:38px; border:1px solid var(--line); border-radius:6px; margin:4px 0 10px; background:#fff; padding:0 10px; font-size:13px; color:#9aa5a0;}
+  .lbl{font-size:11px; color:var(--muted); font-weight:500;}
+
+  /* ───── 1. HERO CURRENT ───── */
+  .hero{display:flex; gap:32px;}
+  .hero-left{flex:1;}
+  .hero h1{font-size:40px; line-height:1.15;}
+  .accent{color:var(--brand);}
+  .hero p.sub{margin:14px 0; font-size:15px; line-height:1.5; max-width:520px;}
+  .form-card{width:330px; flex:none; border:1px solid var(--line); border-radius:8px; padding:18px; background:#fff;}
+  .form-card h3{font-size:16px; margin-bottom:10px;}
+
+  /* HERO PROPOSED */
+  .badge-pill{display:inline-block; border:1px solid var(--brand); color:var(--brand); background:var(--mist); border-radius:999px; padding:5px 14px; font-size:12px; font-weight:700; margin-bottom:14px;}
+  .meta-row{display:flex; gap:22px; margin:16px 0 8px; font-size:14px; font-weight:600;}
+  .meta-row span svg{vertical-align:-3px; margin-right:6px;}
+  .deadline{color:var(--amber); font-size:13px; font-weight:700; margin:6px 0 14px;}
+  .form-card.green{background:var(--brand); border:none; border-radius:14px; box-shadow:0 12px 30px rgba(0,66,37,.25);}
+  .form-card.green h3{color:#fff;}
+  .form-card.green .lbl{color:#cfe0d7;}
+  .form-card.green .btn-form{display:block; width:100%; text-align:center; background:#fff; color:var(--brand); border-radius:8px; padding:11px; font-weight:700; font-size:14px;}
+  .form-card.green .fine{color:#cfe0d7; font-size:11px; font-style:italic; margin-top:8px;}
+
+  /* ───── 2. COHORT TABLE ───── */
+  table.cohort{width:100%; border-collapse:collapse; font-size:14px; border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  .cohort th{background:var(--brand); color:#fff; text-align:left; padding:12px 16px; font-size:13px;}
+  .cohort td{padding:14px 16px; border-top:1px solid var(--line);}
+  .only{color:var(--amber); font-weight:800;}
+
+  /* ───── 3. HEADINGS ───── */
+  .overline{font-size:11px; font-weight:800; letter-spacing:2.5px; color:var(--brand); margin-bottom:8px;}
+  .h2two{font-size:30px;}
+
+  /* ───── 4. BATCH CARDS ───── */
+  .batches{display:flex; gap:18px;}
+  .bcard{flex:1; border:1px solid var(--line); border-radius:14px; padding:20px;}
+  .bcard h4{font-size:17px; margin-bottom:6px;}
+  .bcard .meta{font-size:12px; color:var(--muted); margin-bottom:10px;}
+  .price{font-size:24px; font-weight:800; color:var(--brand);}
+  .strike{font-size:12px; color:var(--muted); text-decoration:line-through;}
+  .off{font-size:12px; color:var(--muted);}
+  .bcard.feat{background:var(--brand); color:#fff; border:none; box-shadow:0 12px 30px rgba(0,66,37,.25); position:relative;}
+  .bcard.feat .meta{color:#cfe0d7;}
+  .bcard.feat .price{color:#fff;}
+  .bcard.feat .strike,.bcard.feat .off{color:#9fbfae;}
+  .pop{position:absolute; top:-11px; left:20px; background:#fff; color:var(--brand); border:1px solid var(--brand); font-size:10px; font-weight:800; letter-spacing:1px; padding:3px 10px; border-radius:999px;}
+  .bcard.outline{border:2px solid var(--brand);}
+
+  /* ───── 5. BAND ───── */
+  .band{background:var(--brand); border-radius:16px; padding:28px 32px; display:flex; align-items:center; gap:24px; color:#fff; box-shadow:0 12px 30px rgba(0,66,37,.25);}
+  .band .chips span{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.3); color:#fff; border-radius:999px; padding:5px 12px; font-size:12px; margin-right:6px;}
+  .band h3{font-size:22px; margin:6px 0 8px;}
+  .band p{font-size:13px; color:#cfe0d7;}
+
+  /* ───── 7. curriculum ───── */
+  .acc-plain{border-top:1px solid var(--line); padding:12px 0; font-size:14px; font-weight:600; display:flex; justify-content:space-between; max-width:640px;}
+  .acc-card{display:flex; align-items:center; gap:14px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:10px; max-width:640px; box-shadow:0 2px 6px rgba(0,66,37,.06);}
+  .acc-card .ic{width:36px; height:36px; border-radius:8px; background:var(--mist); display:flex; align-items:center; justify-content:center; color:var(--brand); font-size:16px;}
+  .acc-card .pill{margin-left:auto; font-size:11px; font-weight:700; color:var(--brand); border:1px solid var(--brand); border-radius:999px; padding:3px 10px; white-space:nowrap;}
+  .tinted{background:var(--mist); border-radius:14px; padding:22px;}
+</style>
+</head>
+<body>
+
+<div class="big-label">1 · Hero section</div>
+<div class="compare">
+  <div class="frame">
+    <span class="tag cur">CURRENT</span>
+    <div class="hero">
+      <div class="hero-left">
+        <h1>Not a course.<br><span class="accent">A career correction.</span></h1>
+        <p class="sub">For graduates, career switchers and working professionals who were taught the subject but never the job — 50 live hours that end in work you can show a hiring panel.</p>
+        <a class="btn btn-g" href="#">Enrol now</a>
+        <a class="btn btn-w" href="#">▶ Watch the 2-min intro</a>
+        <p style="margin-top:14px">
+          <span class="chip">3 months</span>
+          <span class="chip">50 live hours</span>
+          <span class="chip">Offline weekends, Pune / Online weekday evenings</span>
+        </p>
+      </div>
+      <div class="form-card">
+        <h3>Get free counselling</h3>
+        <span class="lbl">Name</span><span class="field">Name</span>
+        <span class="lbl">Phone</span><span class="field">+91 | 10-digit mobile number</span>
+        <a class="btn btn-g" style="display:block;text-align:center" href="#">Talk to a counsellor</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame" style="background:#fbfdfc;">
+    <span class="tag new">PROPOSED</span>
+    <div class="hero">
+      <div class="hero-left">
+        <span class="badge-pill">◦ LIVE PROGRAM + CERTIFICATE</span>
+        <h1>Not a course.<br><span class="accent">A career correction.</span></h1>
+        <p class="sub">For graduates, career switchers and working professionals who were taught the subject but never the job — 50 live hours that end in work you can show a hiring panel.</p>
+        <div class="meta-row">
+          <span>🗓 3 Months</span>
+          <span>🎥 50 Live Hours</span>
+          <span>📍 Online &amp; Offline (Pune)</span>
+        </div>
+        <p class="deadline">⏳ Applications close 10 Nov 2026 · Only 6 offline seats left</p>
+        <a class="btn btn-g" href="#">Enrol now</a>
+        <a class="btn btn-w" href="#">▶ Watch the 2-min intro</a>
+      </div>
+      <div class="form-card green">
+        <h3>Get free counselling</h3>
+        <span class="lbl">Name</span><span class="field">Name</span>
+        <span class="lbl">Phone</span><span class="field">+91 | 10-digit mobile number</span>
+        <a class="btn-form" href="#">Talk to a counsellor</a>
+        <p class="fine">We reply on WhatsApp within 2 working hours.</p>
+      </div>
+    </div>
+    <p class="note">Badge pill on top, icon meta-row replaces plain chips, amber urgency line, and the form becomes a racing-green card with soft shadow.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="big-label">2 · Cohort details table — NEW section (right after hero)</div>
+<div class="compare">
+  <div class="frame">
+    <span class="tag cur">CURRENT</span>
+    <p style="font-size:14px; color:var(--muted);">(Doesn't exist — batch info only appears lower down inside "Choose your batch".)</p>
+  </div>
+  <div class="frame" style="background:#fbfdfc;">
+    <span class="tag new">PROPOSED</span>
+    <div class="overline">UPCOMING BATCHES</div>
+    <h3 class="h2two" style="margin-bottom:14px;">Cohort <span class="accent">details</span></h3>
+    <table class="cohort">
+      <tr><th>Batch type</th><th>Schedule</th><th>Batch starts</th><th>Capacity</th><th></th></tr>
+      <tr><td><b>Online</b> (Mon, Wed, Fri)</td><td>8:30 – 10 PM</td><td>16 Nov 2026</td><td class="only">Only 14 left</td><td><a class="btn btn-g" style="padding:8px 16px;font-size:12px" href="#">Apply now</a></td></tr>
+      <tr><td><b>Offline</b> (Sat, Sun) · Hinjewadi</td><td>2 – 4 PM</td><td>14 Nov 2026</td><td class="only">Only 6 left</td><td><a class="btn btn-g" style="padding:8px 16px;font-size:12px" href="#">Apply now</a></td></tr>
+    </table>
+    <p class="note">Green header row, amber scarcity column, per-row Apply button — all values read from site config.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="big-label">3 · Section headings</div>
+<div class="compare">
+  <div class="frame">
+    <span class="tag cur">CURRENT</span>
+    <h3 class="h2two">Why Fundamental exists</h3>
+  </div>
+  <div class="frame" style="background:#fbfdfc;">
+    <span class="tag new">PROPOSED</span>
+    <div class="overline">THE PROBLEM</div>
+    <h3 class="h2two">Why Fundamental <span class="accent">exists</span></h3>
+    <p class="note">Every section gets a small green overline label (THE PROBLEM, THE METHOD, THE INSTITUTE…) and a two-tone heading with the key word in racing green.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="big-label">4 · Choose your batch cards</div>
+<div class="compare">
+  <div class="frame">
+    <span class="tag cur">CURRENT</span>
+    <div class="batches">
+      <div class="bcard"><h4>Online</h4><p class="meta">Mon, Wed, Fri, 8:30 to 10 PM · Starts 16 Nov</p><span class="strike">₹79,999</span> <span class="price">₹49,999</span> <span class="off">37.5% off</span></div>
+      <div class="bcard"><h4>Offline</h4><p class="meta">Sat and Sun, 2 to 4 PM · Starts 14 Nov</p><span class="strike">₹89,999</span> <span class="price">₹59,999</span> <span class="off">33.3% off</span></div>
+    </div>
+  </div>
+  <div class="frame" style="background:#fbfdfc;">
+    <span class="tag new">PROPOSED</span>
+    <div class="batches" style="padding-top:12px;">
+      <div class="bcard feat">
+        <span class="pop">MOST POPULAR</span>
+        <h4>Online</h4><p class="meta">Mon, Wed, Fri, 8:30 to 10 PM · Starts 16 Nov · 14 seats left</p>
+        <span class="strike">₹79,999</span> <span class="price">₹49,999</span> <span class="off">37.5% off</span><br><br>
+        <a class="btn btn-ow" href="#">Enrol Online</a>
+      </div>
+      <div class="bcard outline">
+        <h4>Offline <span style="font-size:11px;color:var(--brand);font-weight:800;">· HINJEWADI, PUNE</span></h4>
+        <p class="meta">Sat and Sun, 2 to 4 PM · Starts 14 Nov · 6 seats left</p>
+        <span class="strike">₹89,999</span> <span class="price">₹59,999</span> <span class="off">33.3% off</span><br><br>
+        <a class="btn btn-g" href="#">Enrol Offline</a>
+      </div>
+    </div>
+    <p class="note">One featured solid-green card with a "Most popular" pill, the other white with a strong green border — the contrast pairing IIDE uses.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="big-label">5 · Recommended path band — NEW (before FAQ)</div>
+<div class="compare">
+  <div class="frame">
+    <span class="tag cur">CURRENT</span>
+    <p style="font-size:14px; color:var(--muted);">(Doesn't exist.)</p>
+  </div>
+  <div class="frame" style="background:#fbfdfc;">
+    <span class="tag new">PROPOSED</span>
+    <div class="band">
+      <div style="flex:1">
+        <span style="font-size:10px; font-weight:800; letter-spacing:2px; background:#fff; color:var(--brand); border-radius:4px; padding:3px 8px;">RECOMMENDED PATH</span>
+        <h3>Get more when you do both</h3>
+        <p>The strongest outcome: finish the program, then grow inside the community.</p>
+        <p class="chips" style="margin-top:10px;"><span>Marketing Management</span> + <span>Founders Club (free)</span></p>
+      </div>
+      <a class="btn btn-ow" href="#">Talk to a counsellor</a>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="big-label">6 · Curriculum accordion (program page + home FAQ style)</div>
+<div class="compare">
+  <div class="frame">
+    <span class="tag cur">CURRENT</span>
+    <div class="acc-plain"><span>Module 1 (10 hours): Marketing foundations, the job not the subject</span><span>+</span></div>
+    <div class="acc-plain"><span>Module 2 (10 hours): Positioning, audience and messaging</span><span>+</span></div>
+  </div>
+  <div class="frame" style="background:#fbfdfc;">
+    <span class="tag new">PROPOSED</span>
+    <div class="tinted">
+      <div class="acc-card"><div class="ic">📘</div><b style="font-size:14px;">Marketing foundations — the job, not the subject</b><span class="pill">Module 1 · 10 hrs</span></div>
+      <div class="acc-card"><div class="ic">🎯</div><b style="font-size:14px;">Positioning, audience and messaging</b><span class="pill">Module 2 · 10 hrs</span></div>
+    </div>
+    <p class="note">White rounded cards with an icon and an hours pill, sitting on a tinted panel — plus softer shadows, rounder corners and hover-lift applied to all cards site-wide.</p>
+  </div>
+</div>
+
+</body>
+</html>
