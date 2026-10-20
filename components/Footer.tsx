@@ -93,14 +93,9 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/15">
-        <div className="container-site flex flex-col gap-2 py-4 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-site py-4 text-xs text-white/70">
+          {/* Social links intentionally omitted — will be added from the CMS later. */}
           <span>© 2026 Fundamental · fundamental.institute</span>
-          <span className="flex gap-4">
-            <a href={siteConfig.socials.instagram} className="hover:text-white">Instagram</a>
-            <a href={siteConfig.socials.x} className="hover:text-white">X</a>
-            <a href={siteConfig.socials.youtube} className="hover:text-white">YouTube</a>
-            <a href={siteConfig.socials.linkedin} className="hover:text-white">LinkedIn</a>
-          </span>
         </div>
       </div>
     </footer>

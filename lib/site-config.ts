@@ -15,12 +15,7 @@ export const siteConfig = {
   hours: "Mon–Sat, 9 AM to 6 PM", // TODO: confirm
   replyPromise: "2 working hours",
 
-  socials: {
-    instagram: "https://instagram.com/fundamental.institute",
-    x: "https://x.com/fundamentalhq",
-    youtube: "https://youtube.com/@fundamental-institute",
-    linkedin: "https://linkedin.com/company/fundamental-institute",
-  },
+  // Social links will come from the CMS later; nothing renders them for now.
 };
 
 export type BatchMode = "online" | "offline";
