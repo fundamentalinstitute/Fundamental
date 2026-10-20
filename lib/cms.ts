@@ -48,7 +48,13 @@ const settingsFallback: Settings = {
   hours: siteConfig.hours,
   replyPromise: siteConfig.replyPromise,
   applicationDeadline: fallbackDeadline,
-  socials: [],
+  // Placeholder links — the real URLs are edited in Sanity (Site settings → socials).
+  socials: [
+    { label: "Instagram", url: "#" },
+    { label: "X", url: "#" },
+    { label: "YouTube", url: "#" },
+    { label: "LinkedIn", url: "#" },
+  ],
 };
 
 export async function getSettings(): Promise<Settings> {

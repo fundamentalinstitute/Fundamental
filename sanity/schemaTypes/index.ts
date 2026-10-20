@@ -27,7 +27,11 @@ const siteSettings = defineType({
           type: "object",
           fields: [
             defineField({ name: "label", type: "string" }),
-            defineField({ name: "url", type: "url" }),
+            defineField({
+              name: "url",
+              type: "string",
+              description: 'Full URL ("#" keeps it as a placeholder)',
+            }),
           ],
         },
       ],
