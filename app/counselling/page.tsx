@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import Accordion from "@/components/Accordion";
-import { counsellingFaq } from "@/lib/content";
-import { siteConfig } from "@/lib/site-config";
+import { getFaq, getSettings } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Talk to a counsellor, free",
@@ -17,7 +16,8 @@ const steps = [
   { t: "30-minute call", d: "Fit, mode, fees and EMI, next steps" },
 ];
 
-export default function CounsellingPage() {
+export default async function CounsellingPage() {
+  const [settings, faq] = await Promise.all([getSettings(), getFaq("counselling")]);
   return (
     <>
       {/* FOLD 01: INTRO + INTAKE FORM */}
@@ -27,7 +27,7 @@ export default function CounsellingPage() {
           <p className="max-w-2xl text-base">
             Thirty minutes on whether the program fits you, which mode suits
             your week, and exactly what the fees and EMI look like. No pressure,
-            no scripts. We reply within {siteConfig.replyPromise}.
+            no scripts. We reply within {settings.replyPromise}.
           </p>
 
           <div className="mt-4 flex flex-col gap-10 lg:flex-row">
@@ -91,7 +91,7 @@ export default function CounsellingPage() {
       {/* FOLD 02: FAQ */}
       <Section tone="mist">
         <div className="max-w-2xl">
-          <Accordion items={counsellingFaq} />
+          <Accordion items={faq} variant="cards" />
         </div>
       </Section>
     </>

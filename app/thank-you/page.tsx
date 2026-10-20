@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Section from "@/components/Section";
 import PersonalHeading from "@/components/PersonalHeading";
-import { siteConfig } from "@/lib/site-config";
+import { getSettings, type Settings } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Thank you",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
  * can fire here. No auto-redirect. Personal names come from sessionStorage
  * (set by LeadForm), never from the URL.
  */
-const content: Record<
+const buildContent = (siteConfig: Settings): Record<
   string,
   {
     heading: string;
@@ -22,7 +22,7 @@ const content: Record<
     steps: string;
     ctas: { label: string; href: string; primary?: boolean }[];
   }
-> = {
+> => ({
   counselling: {
     heading: "Got it.",
     personal: true,
@@ -71,7 +71,7 @@ const content: Record<
     steps: `We reply within ${siteConfig.replyPromise}`,
     ctas: [{ label: "Chat on WhatsApp", href: siteConfig.whatsappLink, primary: true }],
   },
-};
+});
 
 export default async function ThankYouPage({
   searchParams,
@@ -79,6 +79,7 @@ export default async function ThankYouPage({
   searchParams: Promise<{ type?: string }>;
 }) {
   const { type } = await searchParams;
+  const content = buildContent(await getSettings());
   const c = content[type ?? ""] ?? content.enquiry;
 
   return (

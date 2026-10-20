@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     cpus: 1,
     workerThreads: false,
   },
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
+  },
 };
 
 export default nextConfig;

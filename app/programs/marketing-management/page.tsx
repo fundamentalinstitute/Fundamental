@@ -7,8 +7,16 @@ import ComparisonTable from "@/components/ComparisonTable";
 import PricingCard from "@/components/PricingCard";
 import FinalCta from "@/components/FinalCta";
 import VideoPlaceholder from "@/components/VideoPlaceholder";
-import { batches, type BatchMode, discountPct, formatINR } from "@/lib/site-config";
-import { curriculum, learnOutcomes, programFaq } from "@/lib/content";
+import { type BatchMode, discountPct, formatINR } from "@/lib/site-config";
+import {
+  getBatches,
+  getCurriculum,
+  getFaq,
+  getFounder,
+  getProgram,
+  getSettings,
+  getTestimonials,
+} from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Marketing Management — 50 live hours, 3 months",
@@ -24,24 +32,6 @@ const subnav = [
   { href: "#faqs", label: "FAQs" },
 ];
 
-const personas = [
-  {
-    t: "Fresh graduate",
-    d: "Any stream, no marketing background",
-    leaves: "A portfolio that beats three years of certificates",
-  },
-  {
-    t: "1 to 3 years in",
-    d: "Stuck in a role going nowhere",
-    leaves: "The skills to move into the role you actually wanted",
-  },
-  {
-    t: "Switching in",
-    d: "From sales, ops or engineering",
-    leaves: "A credible story and shipped work to back it",
-  },
-];
-
 export default async function ProgramPage({
   searchParams,
 }: {
@@ -49,6 +39,16 @@ export default async function ProgramPage({
 }) {
   const { mode } = await searchParams;
   const initialMode: BatchMode = mode === "offline" ? "offline" : "online";
+  const [settings, batches, program, modules, testimonials, faq, founder] =
+    await Promise.all([
+      getSettings(),
+      getBatches(),
+      getProgram(),
+      getCurriculum(),
+      getTestimonials(),
+      getFaq("program"),
+      getFounder(),
+    ]);
 
   return (
     <>
@@ -72,10 +72,8 @@ export default async function ProgramPage({
               <Link href="/programs" className="hover:text-brand">Programs</Link> / Marketing
               Management
             </p>
-            <h1 className="text-4xl font-bold sm:text-5xl">Marketing Management</h1>
-            <p className="text-base">
-              Walk into marketing interviews with work worth talking about.
-            </p>
+            <h1 className="text-4xl font-bold sm:text-5xl">{program.title}</h1>
+            <p className="text-base">{program.promise}</p>
             <div className="flex flex-wrap gap-2">
               <span className="chip">50 hours</span>
               <span className="chip">3 months</span>
@@ -89,7 +87,11 @@ export default async function ProgramPage({
             </p>
           </div>
           <div className="w-full shrink-0 lg:w-90">
-            <PricingCard initialMode={initialMode} />
+            <PricingCard
+              initialMode={initialMode}
+              batches={batches}
+              whatsappLink={settings.whatsappLink}
+            />
           </div>
         </div>
       </Section>
@@ -99,12 +101,13 @@ export default async function ProgramPage({
         <div className="flex flex-col gap-5">
           <h2 className="section-title">Who this is for</h2>
           <div className="grid gap-4 md:grid-cols-3">
-            {personas.map((p) => (
-              <div key={p.t} className="card flex flex-col gap-2">
-                <h3 className="text-base font-bold">{p.t}</h3>
-                <p className="text-xs text-muted">{p.d}</p>
+            {program.personas.map((p) => (
+              <div key={p.title} className="card flex flex-col gap-2">
+                <h3 className="text-base font-bold">{p.title}</h3>
+                <p className="text-xs text-muted">{p.subtitle}</p>
                 <p className="text-sm">
-                  <span className="font-semibold">You&apos;ll leave with:</span> {p.leaves}
+                  <span className="font-semibold">You&apos;ll leave with:</span>{" "}
+                  {p.leavesWith}
                 </p>
               </div>
             ))}
@@ -121,7 +124,7 @@ export default async function ProgramPage({
         <div className="flex flex-col gap-5">
           <h2 className="section-title">What you&apos;ll learn</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {learnOutcomes.map((o) => (
+            {program.outcomes.map((o) => (
               <div key={o} className="card flex flex-col gap-2 p-4">
                 <div className="h-7 w-7 rounded-md bg-brand/10" aria-hidden />
                 <p className="text-sm leading-snug">{o}</p>
@@ -140,10 +143,10 @@ export default async function ProgramPage({
           <div className="max-w-2xl">
             <Accordion
               variant="cards"
-              items={curriculum.map((m, i) => ({
-                q: m.title.split(": ")[1] ?? m.title,
+              items={modules.map((m, i) => ({
+                q: m.title,
                 a: m.detail,
-                icon: ["📘", "🎯", "📣", "📊", "🚀"][i] ?? "📘",
+                icon: m.icon || "📘",
                 pill: `Module ${i + 1} · ${m.hours} hrs`,
               }))}
             />
@@ -180,12 +183,7 @@ export default async function ProgramPage({
       <Section tone="mist">
         <div className="flex max-w-2xl flex-col gap-3">
           <h2 className="section-title">The internship rule</h2>
-          <p className="text-sm leading-relaxed">
-            The top 20% of each batch, selected on weekly assignment scores and
-            capstone review, <strong>earn</strong> an internship of up to 4
-            months. Interns work on live client briefs; partner companies are
-            named only with their permission.
-          </p>
+          <p className="text-sm leading-relaxed">{program.internshipRule}</p>
           <p className="text-xs text-muted italic">
             Phrased as &ldquo;earn&rdquo;, never as a guarantee for everyone — on
             purpose.
@@ -201,11 +199,7 @@ export default async function ProgramPage({
           </div>
           <div className="flex flex-1 flex-col gap-3">
             <h2 className="text-xl font-bold">Your instructor</h2>
-            <p className="max-w-xl text-sm leading-relaxed">
-              Anjan Prasad — 10+ years on the hiring side as interviewer and
-              consultant. He teaches the way work is reviewed in a real team:
-              you ship, he tears it down kindly, you ship better.
-            </p>
+            <p className="max-w-xl text-sm leading-relaxed">{founder.homeBlurb}</p>
             <Link href="/about" className="text-sm font-semibold text-brand hover:underline">
               → About Anjan
             </Link>
@@ -260,8 +254,7 @@ export default async function ProgramPage({
           <div className="flex flex-col gap-2">
             <h2 className="section-title">Your certificate</h2>
             <p className="max-w-md text-sm leading-relaxed">
-              Issued on completing the curriculum and capstone, signed by the
-              founder. It states what you built — not just that you attended.
+              {program.certificateText}
             </p>
           </div>
         </div>
@@ -269,7 +262,7 @@ export default async function ProgramPage({
 
       {/* FOLD 10: TESTIMONIALS */}
       <Section tone="mist">
-        <Testimonials heading="What earlier mentees say" />
+        <Testimonials heading="What earlier mentees say" items={testimonials} />
       </Section>
 
       {/* FOLD 11: PROGRAM FAQS */}
@@ -277,7 +270,7 @@ export default async function ProgramPage({
         <div className="flex flex-col gap-5">
           <h2 className="section-title">Program FAQs</h2>
           <div className="max-w-2xl">
-            <Accordion items={programFaq} variant="cards" />
+            <Accordion items={faq} variant="cards" />
           </div>
         </div>
       </Section>

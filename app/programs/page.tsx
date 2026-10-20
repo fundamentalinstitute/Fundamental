@@ -4,8 +4,8 @@ import Section from "@/components/Section";
 import Accordion from "@/components/Accordion";
 import FinalCta from "@/components/FinalCta";
 import LeadForm from "@/components/LeadForm";
-import { batches, formatINR } from "@/lib/site-config";
-import { homeFaq } from "@/lib/content";
+import { formatINR } from "@/lib/site-config";
+import { getBatches, getFaq, getProgram } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Programs with certificate",
@@ -18,7 +18,12 @@ const comingSoon = [
   { name: "Startup Marketing", meta: "Coming soon · live" },
 ];
 
-export default function ProgramsPage() {
+export default async function ProgramsPage() {
+  const [batches, program, faq] = await Promise.all([
+    getBatches(),
+    getProgram(),
+    getFaq("home"),
+  ]);
   return (
     <>
       {/* FOLD 01: HEADER */}
@@ -48,10 +53,8 @@ export default function ProgramsPage() {
             <div className="flex h-24 items-center justify-center rounded-md bg-mist text-xs text-muted">
               Program image
             </div>
-            <h2 className="text-base font-bold">Marketing Management</h2>
-            <p className="text-xs text-muted">
-              From any background to job-ready marketer in 3 months.
-            </p>
+            <h2 className="text-base font-bold">{program.title}</h2>
+            <p className="text-xs text-muted">{program.cardPromise}</p>
             <p className="text-xs">
               50 hours · 3 months · Online or Offline · from{" "}
               {formatINR(batches.online.offerPrice)} · Certificate
@@ -105,7 +108,7 @@ export default function ProgramsPage() {
       {/* FOLD 05: FAQ */}
       <Section>
         <div className="max-w-2xl">
-          <Accordion items={homeFaq.slice(0, 4)} />
+          <Accordion items={faq.slice(0, 4)} variant="cards" />
         </div>
       </Section>
 

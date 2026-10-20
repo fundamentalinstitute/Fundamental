@@ -1,9 +1,13 @@
 import { siteConfig } from "@/lib/site-config";
 
-export default function WhatsAppFloater() {
+export default function WhatsAppFloater({
+  link = siteConfig.whatsappLink,
+}: {
+  link?: string;
+}) {
   return (
     <a
-      href={siteConfig.whatsappLink}
+      href={link}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"

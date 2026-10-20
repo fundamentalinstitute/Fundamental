@@ -3,13 +3,19 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-const photos = [
-  { src: "/founder/anjan-1.jpg", alt: "Anjan Prasad, founder of Fundamental Institute" },
-  { src: "/founder/anjan-2.jpg", alt: "Anjan Prasad smiling" },
-  { src: "/founder/anjan-3.jpg", alt: "Anjan Prasad at the studio" },
+const defaultPhotos = [
+  { url: "/founder/anjan-1.jpg", alt: "Anjan Prasad, founder of Fundamental Institute" },
+  { url: "/founder/anjan-2.jpg", alt: "Anjan Prasad smiling" },
+  { url: "/founder/anjan-3.jpg", alt: "Anjan Prasad at the studio" },
 ];
 
-export default function FounderCarousel({ className }: { className?: string }) {
+export default function FounderCarousel({
+  className,
+  photos = defaultPhotos,
+}: {
+  className?: string;
+  photos?: { url: string; alt: string }[];
+}) {
   const [i, setI] = useState(0);
 
   useEffect(() => {
@@ -21,8 +27,8 @@ export default function FounderCarousel({ className }: { className?: string }) {
     <div className={`relative overflow-hidden rounded-lg ${className ?? ""}`}>
       {photos.map((p, idx) => (
         <Image
-          key={p.src}
-          src={p.src}
+          key={p.url}
+          src={p.url}
           alt={p.alt}
           fill
           sizes="(min-width: 1024px) 24rem, 100vw"
@@ -53,7 +59,7 @@ export default function FounderCarousel({ className }: { className?: string }) {
       <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
         {photos.map((p, idx) => (
           <button
-            key={p.src}
+            key={p.url}
             type="button"
             aria-label={`Photo ${idx + 1}`}
             onClick={() => setI(idx)}

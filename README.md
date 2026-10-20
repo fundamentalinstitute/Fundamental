@@ -11,7 +11,7 @@ same architecture as Sapiens: a decoupled, headless stack.
 | Styling | Tailwind CSS v4 | ✅ in place |
 | Hosting / CI | Vercel | push to deploy |
 | Database | Supabase (PostgreSQL + RLS) | schema in `supabase/schema.sql`; set env vars |
-| CMS | Sanity (blog, program content) | content currently typed in `lib/content.ts`; swap to GROQ queries |
+| CMS | Sanity (all site content) | ✅ wired — Studio at `/studio`, schemas in `sanity/schemaTypes`, data layer in `lib/cms.ts` (60s revalidate, local fallbacks); seed import in `sanity/seed/` |
 | Email | Resend | TODO hook in `app/api/leads/route.ts` |
 | Analytics | GA4 + PostHog | env placeholders in `.env.example` |
 

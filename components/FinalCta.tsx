@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { batches } from "@/lib/site-config";
+import { getBatches } from "@/lib/cms";
 
-export default function FinalCta() {
-  const b = batches.offline;
+export default async function FinalCta() {
+  const b = (await getBatches()).offline;
   return (
     <section className="bg-sand">
       <div className="container-site flex flex-col gap-4 py-12">

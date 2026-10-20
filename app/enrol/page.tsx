@@ -2,19 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Section from "@/components/Section";
 import EnrolForm from "@/components/EnrolForm";
-import { type BatchMode, siteConfig } from "@/lib/site-config";
+import { type BatchMode } from "@/lib/site-config";
+import { getBatches, getSettings } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Enrol",
   description: "Pick your batch and request your seat. A counsellor calls you back with the payment link.",
   robots: { index: false }, // never in nav; reached from Enrol buttons
 };
-
-const steps = [
-  { t: "A counsellor calls", d: `Within ${siteConfig.replyPromise}` },
-  { t: "You get a payment link", d: "EMI available" },
-  { t: "Seat confirmed on payment", d: "Onboarding arrives on WhatsApp" },
-];
 
 export default async function EnrolPage({
   searchParams,
@@ -23,12 +18,18 @@ export default async function EnrolPage({
 }) {
   const { mode } = await searchParams;
   const initialMode: BatchMode = mode === "offline" ? "offline" : "online";
+  const [batches, settings] = await Promise.all([getBatches(), getSettings()]);
+  const steps = [
+    { t: "A counsellor calls", d: `Within ${settings.replyPromise}` },
+    { t: "You get a payment link", d: "EMI available" },
+    { t: "Seat confirmed on payment", d: "Onboarding arrives on WhatsApp" },
+  ];
 
   return (
     <Section>
       <div className="flex flex-col gap-10 lg:flex-row">
         <div className="w-full lg:max-w-xl">
-          <EnrolForm initialMode={initialMode} />
+          <EnrolForm initialMode={initialMode} batches={batches} />
         </div>
 
         <aside className="flex flex-1 flex-col gap-5">
@@ -50,7 +51,7 @@ export default async function EnrolPage({
               Refund policy
             </Link>
           </p>
-          <a href={siteConfig.whatsappLink} className="btn-secondary w-fit">
+          <a href={settings.whatsappLink} className="btn-secondary w-fit">
             Questions? WhatsApp us
           </a>
           {/* Phase 2: this page is replaced by the checkout flow; URL redirects */}

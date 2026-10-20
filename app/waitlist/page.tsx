@@ -3,7 +3,8 @@ import Image from "next/image";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import VideoPlaceholder from "@/components/VideoPlaceholder";
-import { batches, discountPct, formatINR, siteConfig } from "@/lib/site-config";
+import { discountPct, formatINR } from "@/lib/site-config";
+import { getBatches, getFounder, getSettings } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Join the waitlist",
@@ -17,7 +18,12 @@ export const metadata: Metadata = {
  * self-sufficient, so it reads correctly either way. (Live 28 Sept – 9 Oct;
  * becomes Home at launch.)
  */
-export default function WaitlistPage() {
+export default async function WaitlistPage() {
+  const [batches, founder, settings] = await Promise.all([
+    getBatches(),
+    getFounder(),
+    getSettings(),
+  ]);
   const on = batches.online;
   const off = batches.offline;
 
@@ -97,13 +103,10 @@ export default function WaitlistPage() {
             Anjan
           </div>
           <div>
-            <p className="text-lg font-bold">Anjan Prasad</p>
-            <p className="text-sm text-muted">
-              10+ years on the hiring side. Building the institute he wishes
-              existed.
-            </p>
+            <p className="text-lg font-bold">{founder.name}</p>
+            <p className="text-sm text-muted">{founder.shortBio}</p>
             <a
-              href={siteConfig.whatsappLink}
+              href={settings.whatsappLink}
               className="mt-2 inline-block text-sm font-semibold text-brand hover:underline"
             >
               WhatsApp us →

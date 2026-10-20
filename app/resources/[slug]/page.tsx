@@ -1,18 +1,16 @@
 import type { Metadata } from "next";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
-import { leadMagnet } from "@/lib/content";
+import { getLeadMagnet } from "@/lib/cms";
 
 export const metadata: Metadata = {
-  title: leadMagnet.title,
+  title: "Free resource",
   description: "A free, practical PDF — sent to your inbox.",
 };
 
-/**
- * Lead magnet template (/resources/[slug]). One magnet for now; becomes a
- * Sanity-driven collection later.
- */
-export default function LeadMagnetPage() {
+/** Lead magnet template (/resources/[slug]), content from Sanity. */
+export default async function LeadMagnetPage() {
+  const leadMagnet = await getLeadMagnet();
   return (
     <Section>
       <div className="flex flex-col gap-10 md:flex-row md:items-start">

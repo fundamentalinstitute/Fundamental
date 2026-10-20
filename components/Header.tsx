@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { announcement } from "@/lib/site-config";
 
 const nav = [
   { href: "/programs", label: "Programs" },
@@ -14,7 +13,7 @@ const nav = [
   { href: "/contact", label: "Contact" },
 ];
 
-export default function Header() {
+export default function Header({ announcement }: { announcement: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isActive = (href: string) =>

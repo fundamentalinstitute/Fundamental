@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
-import { siteConfig } from "@/lib/site-config";
+import { getSettings } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Contact",
   description: "Get in touch with Fundamental Institute. We reply within 2 working hours.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getSettings();
   return (
     <Section>
       <div className="flex flex-col gap-3">
         <h1 className="text-4xl font-bold">Get in touch</h1>
-        <p className="text-sm text-muted">We reply within {siteConfig.replyPromise}.</p>
+        <p className="text-sm text-muted">We reply within {settings.replyPromise}.</p>
       </div>
 
       <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-start">
@@ -46,24 +47,24 @@ export default function ContactPage() {
         <div className="flex flex-1 flex-col gap-4">
           <div className="card">
             <p className="text-sm font-bold">WhatsApp</p>
-            <p className="text-sm text-muted">{siteConfig.whatsappNumber}</p>
-            <a href={siteConfig.whatsappLink} className="btn-primary mt-3 px-4 py-2 text-xs">
+            <p className="text-sm text-muted">{settings.whatsappNumber}</p>
+            <a href={settings.whatsappLink} className="btn-primary mt-3 px-4 py-2 text-xs">
               Chat now
             </a>
           </div>
           <div className="card">
             <p className="text-sm font-bold">Email</p>
             <a
-              href={`mailto:${siteConfig.email}`}
+              href={`mailto:${settings.email}`}
               className="text-sm text-brand hover:underline"
             >
-              {siteConfig.email}
+              {settings.email}
             </a>
           </div>
           <div className="card">
             <p className="text-sm font-bold">Hinjewadi studio</p>
             <p className="text-sm text-muted">
-              {siteConfig.address} · {siteConfig.hours}
+              {settings.address} · {settings.hours}
             </p>
           </div>
           <iframe

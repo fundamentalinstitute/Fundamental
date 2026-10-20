@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  batches,
+  type Batch,
+  batches as defaultBatches,
   type BatchMode,
   discountPct,
   emiFrom,
@@ -11,7 +12,15 @@ import {
   siteConfig,
 } from "@/lib/site-config";
 
-export default function PricingCard({ initialMode = "online" }: { initialMode?: BatchMode }) {
+export default function PricingCard({
+  initialMode = "online",
+  batches = defaultBatches,
+  whatsappLink = siteConfig.whatsappLink,
+}: {
+  initialMode?: BatchMode;
+  batches?: Record<BatchMode, Batch>;
+  whatsappLink?: string;
+}) {
   const [mode, setMode] = useState<BatchMode>(initialMode);
   const b = batches[mode];
 
@@ -50,7 +59,7 @@ export default function PricingCard({ initialMode = "online" }: { initialMode?: 
       <Link href={`/enrol?mode=${mode}`} className="btn-primary">
         Enrol now
       </Link>
-      <a href={siteConfig.whatsappLink} className="btn-secondary">
+      <a href={whatsappLink} className="btn-secondary">
         Talk on WhatsApp
       </a>
     </div>

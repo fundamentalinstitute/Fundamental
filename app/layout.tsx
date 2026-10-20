@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFloater from "@/components/WhatsAppFloater";
+import { getAnnouncement, getSettings } from "@/lib/cms";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -17,16 +18,20 @@ export const metadata: Metadata = {
     "Live, practitioner-led Marketing Management program in Pune and online. 50 live hours, small batches, internship for the top 20%.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const [announcement, settings] = await Promise.all([
+    getAnnouncement(),
+    getSettings(),
+  ]);
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <Header />
+        <Header announcement={announcement} />
         <main>{children}</main>
         <Footer />
-        <WhatsAppFloater />
+        <WhatsAppFloater link={settings.whatsappLink} />
       </body>
     </html>
   );

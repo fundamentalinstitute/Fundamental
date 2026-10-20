@@ -2,14 +2,21 @@
 
 import { useState } from "react";
 import {
-  batches,
+  type Batch,
+  batches as defaultBatches,
   type BatchMode,
   discountPct,
   formatINR,
 } from "@/lib/site-config";
 import LeadForm from "@/components/LeadForm";
 
-export default function EnrolForm({ initialMode }: { initialMode: BatchMode }) {
+export default function EnrolForm({
+  initialMode,
+  batches = defaultBatches,
+}: {
+  initialMode: BatchMode;
+  batches?: Record<BatchMode, Batch>;
+}) {
   const [mode, setMode] = useState<BatchMode>(initialMode);
   const b = batches[mode];
 

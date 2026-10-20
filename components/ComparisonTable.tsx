@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { batches, discountPct, formatINR } from "@/lib/site-config";
+import { discountPct, formatINR } from "@/lib/site-config";
+import { getBatches } from "@/lib/cms";
 
-export default function ComparisonTable() {
-  const on = batches.online;
-  const off = batches.offline;
+export default async function ComparisonTable() {
+  const { online: on, offline: off } = await getBatches();
   const rows: [string, string, string][] = [
     ["Schedule", on.schedule, off.schedule],
     ["Batch start", on.startDate, off.startDate],

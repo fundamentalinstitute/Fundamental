@@ -3,7 +3,8 @@ import Link from "next/link";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import FinalCta from "@/components/FinalCta";
-import { blogPosts } from "@/lib/content";
+import Image from "next/image";
+import { getPosts } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Blog — straight talk about careers and marketing",
@@ -11,9 +12,10 @@ export const metadata: Metadata = {
     "No listicles, no fluff. What hiring managers actually look for, and how to build a career that survives contact with the market.",
 };
 
-const categories = ["All", "Careers", "Interviews", "Programs"];
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const blogPosts = await getPosts();
+  const categories = ["All", ...new Set(blogPosts.map((p) => p.category))];
   return (
     <>
       {/* FOLD 01: HEADER + CATEGORIES */}
@@ -43,9 +45,15 @@ export default function BlogPage() {
               href={`/blog/${p.slug}`}
               className="card flex flex-col gap-3 transition-colors hover:border-brand"
             >
-              <div className="flex h-36 items-center justify-center rounded-md bg-mist text-xs text-muted">
-                Article image
-              </div>
+              {p.heroImageUrl ? (
+                <div className="relative h-36 overflow-hidden rounded-md">
+                  <Image src={p.heroImageUrl} alt={p.title} fill className="object-cover" />
+                </div>
+              ) : (
+                <div className="flex h-36 items-center justify-center rounded-md bg-mist text-xs text-muted">
+                  Article image
+                </div>
+              )}
               <span className="chip w-fit">{p.category}</span>
               <h2 className="text-base leading-snug font-bold">{p.title}</h2>
               <p className="text-xs leading-relaxed text-muted">{p.excerpt}</p>

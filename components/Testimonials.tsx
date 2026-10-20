@@ -1,6 +1,13 @@
-import { testimonials } from "@/lib/content";
+import { type Testimonial, testimonials as defaults } from "@/lib/content";
 
-export default function Testimonials({ heading }: { heading: string }) {
+export default function Testimonials({
+  heading,
+  items = defaults,
+}: {
+  heading: string;
+  items?: Testimonial[];
+}) {
+  const testimonials = items;
   return (
     <div className="flex flex-col gap-5">
       <h2 className="section-title">{heading}</h2>

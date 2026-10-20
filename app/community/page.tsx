@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import Accordion from "@/components/Accordion";
-import { communityFaq } from "@/lib/content";
+import { getCommunityPage, getFaq } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "The Founders Club",
@@ -10,24 +10,9 @@ export const metadata: Metadata = {
     "A free community of founders, working professionals and graduates. City chapters, quarterly meetups, one WhatsApp group that's actually useful.",
 };
 
-const chapters = [
-  {
-    city: "Pune",
-    status: "Live" as const,
-    head: "Chapter head: Anjan Prasad",
-    next: "Next meetup: first meetup soon",
-  },
-  { city: "Mumbai", status: "Coming" as const, head: "Chapter head: TBA", next: "" },
-  { city: "Bengaluru", status: "Coming" as const, head: "Chapter head: TBA", next: "" },
-];
-
-const perks = [
-  { t: "Meet founders and hiring managers", d: "The room you can't get into on LinkedIn" },
-  { t: "Quarterly events in your city", d: "Small, curated, no mic-hogging panels" },
-  { t: "First access to founder programs and the fund", d: "Members hear everything first" },
-];
-
-export default function CommunityPage() {
+export default async function CommunityPage() {
+  const [page, faq] = await Promise.all([getCommunityPage(), getFaq("community")]);
+  const { chapters, perks } = page;
   return (
     <>
       {/* FOLD 01: WHAT THE FOUNDERS CLUB IS */}
@@ -128,9 +113,9 @@ export default function CommunityPage() {
         <div className="flex flex-col gap-8">
           <div className="grid gap-4 md:grid-cols-3">
             {perks.map((p) => (
-              <div key={p.t} className="card">
-                <p className="text-sm font-bold">{p.t}</p>
-                <p className="mt-1 text-xs text-muted">{p.d}</p>
+              <div key={p.title} className="card">
+                <p className="text-sm font-bold">{p.title}</p>
+                <p className="mt-1 text-xs text-muted">{p.description}</p>
               </div>
             ))}
           </div>
@@ -144,7 +129,7 @@ export default function CommunityPage() {
       {/* FOLD 05: FAQ */}
       <Section>
         <div className="max-w-2xl">
-          <Accordion items={communityFaq} />
+          <Accordion items={faq} variant="cards" />
         </div>
       </Section>
     </>

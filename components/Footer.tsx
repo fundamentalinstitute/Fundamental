@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { siteConfig } from "@/lib/site-config";
 import LeadForm from "@/components/LeadForm";
+import { getSettings } from "@/lib/cms";
 
 const columns = [
   {
@@ -33,7 +33,8 @@ const columns = [
   },
 ];
 
-export default function Footer() {
+export default async function Footer() {
+  const settings = await getSettings();
   return (
     <footer className="bg-brand text-white">
       {/* Notify-me band */}
@@ -62,17 +63,17 @@ export default function Footer() {
             recorded course.
           </p>
           <p className="text-xs text-white/70">
-            {siteConfig.address}
+            {settings.address}
             <br />
-            {siteConfig.hours}
+            {settings.hours}
           </p>
           <p className="text-xs text-white/70">
-            <a href={siteConfig.whatsappLink} className="hover:text-white">
-              WhatsApp {siteConfig.whatsappNumber}
+            <a href={settings.whatsappLink} className="hover:text-white">
+              WhatsApp {settings.whatsappNumber}
             </a>
             <br />
-            <a href={`mailto:${siteConfig.email}`} className="hover:text-white">
-              {siteConfig.email}
+            <a href={`mailto:${settings.email}`} className="hover:text-white">
+              {settings.email}
             </a>
           </p>
         </div>
@@ -93,9 +94,18 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/15">
-        <div className="container-site py-4 text-xs text-white/70">
-          {/* Social links intentionally omitted — will be added from the CMS later. */}
+        <div className="container-site flex flex-col gap-2 py-4 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 Fundamental · fundamental.institute</span>
+          {/* Social links render only once added in the CMS (Site settings → socials) */}
+          {settings.socials.length > 0 && (
+            <span className="flex gap-4">
+              {settings.socials.map((s) => (
+                <a key={s.label} href={s.url} className="hover:text-white">
+                  {s.label}
+                </a>
+              ))}
+            </span>
+          )}
         </div>
       </div>
     </footer>

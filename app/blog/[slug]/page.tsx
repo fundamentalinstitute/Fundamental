@@ -4,10 +4,12 @@ import { notFound } from "next/navigation";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import FinalCta from "@/components/FinalCta";
-import { blogPosts } from "@/lib/content";
+import Image from "next/image";
+import { getPost, getPosts } from "@/lib/cms";
 
-export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  const posts = await getPosts();
+  return posts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -16,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getPost(slug);
   return post
     ? { title: post.title, description: post.excerpt }
     : { title: "Article" };
@@ -28,10 +30,10 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getPost(slug);
   if (!post) notFound();
 
-  const related = blogPosts.filter((p) => p.slug !== slug).slice(0, 3);
+  const related = (await getPosts()).filter((p) => p.slug !== slug).slice(0, 3);
   const mid = Math.ceil(post.body.length / 2);
 
   return (
@@ -47,9 +49,15 @@ export default async function ArticlePage({
           <p className="text-xs text-muted">
             Anjan Prasad · {post.date} · {post.readMinutes} min read
           </p>
-          <div className="flex h-56 items-center justify-center rounded-lg bg-mist text-xs text-muted">
-            Hero image
-          </div>
+          {post.heroImageUrl ? (
+            <div className="relative h-56 overflow-hidden rounded-lg">
+              <Image src={post.heroImageUrl} alt={post.title} fill className="object-cover" />
+            </div>
+          ) : (
+            <div className="flex h-56 items-center justify-center rounded-lg bg-mist text-xs text-muted">
+              Hero image
+            </div>
+          )}
 
           {post.body.slice(0, mid).map((para) => (
             <p key={para.slice(0, 32)} className="text-base leading-relaxed">
