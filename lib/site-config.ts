@@ -38,12 +38,12 @@ export const batches: Record<BatchMode, Batch> = {
     mode: "online",
     label: "Online",
     schedule: "Mon, Wed, Fri, 8:30 to 10 PM",
-    startDate: "16 Nov 2026",
+    startDate: "7 Dec 2026",
     seats: 30,
-    seatsLeft: 14,
+    seatsLeft: 25,
     listPrice: 79999,
     offerPrice: 49999,
-    location: "Live online · recordings available",
+    location: "Live online",
     includes: [
       "Same 50-hour live curriculum",
       "Mentoring",
@@ -55,9 +55,9 @@ export const batches: Record<BatchMode, Batch> = {
     mode: "offline",
     label: "Offline",
     schedule: "Sat and Sun, 2 to 4 PM",
-    startDate: "14 Nov 2026",
+    startDate: "5 Dec 2026",
     seats: 15,
-    seatsLeft: 6,
+    seatsLeft: 13,
     listPrice: 89999,
     offerPrice: 59999,
     location: "Hinjewadi, Pune",
@@ -73,7 +73,7 @@ export const batches: Record<BatchMode, Batch> = {
 
 export const emiFrom = 4999;
 
-export const applicationDeadline = "10 Nov 2026";
+export const applicationDeadline = "1 Dec 2026";
 
 export function discountPct(b: Batch) {
   const pct = Math.round((1 - b.offerPrice / b.listPrice) * 1000) / 10;
