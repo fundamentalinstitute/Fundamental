@@ -152,7 +152,7 @@ export interface CurriculumModule {
   topics: string[];
 }
 
-/** 9 modules, 50 hours total — from "Marketing Management: Curriculum". */
+/** 10 modules, 50 hours total — final "Marketing Management: Curriculum". */
 export const curriculum: CurriculumModule[] = [
   {
     title: "Marketing & Digital Foundations",
@@ -172,12 +172,14 @@ export const curriculum: CurriculumModule[] = [
     title: "Audience Research",
     hours: 4,
     detail:
-      "Audience research basics, segmentation, persona creation and customer journey mapping — so every decision that follows starts from a real person, not a guess.",
+      "Audience research basics with surveys and interviews, audience insights derivation, segmentation, persona creation and customer journey mapping, plus primary and secondary market research.",
     topics: [
-      "Audience research basics",
+      "Audience research basics: surveys & interviews",
+      "Audience insights derivation",
       "Segmentation",
       "Persona creation",
       "Customer journey mapping",
+      "Market research: primary & secondary",
       "Hands-on: two personas + a journey map",
     ],
   },
@@ -185,14 +187,30 @@ export const curriculum: CurriculumModule[] = [
     title: "Brand & Marketing Strategy",
     hours: 6,
     detail:
-      "Brand positioning, voice and tone, the strategy framework, channel strategy, campaign planning and budget allocation — the thinking layer that separates marketers from button-pushers.",
+      "Brand positioning, brand architecture, digital brand assets, voice and tone, the strategy framework, channel strategy, campaign planning and budget allocation.",
     topics: [
-      "Brand positioning, voice and tone",
-      "The strategy framework",
-      "Channel strategy",
-      "Campaign planning",
-      "Budget allocation",
+      "Brand positioning",
+      "Brand architecture",
+      "Digital brand assets",
+      "Voice and tone",
+      "The strategy framework & channel strategy",
+      "Campaign planning & budget allocation",
       "Hands-on: positioning, channel mix, budget split",
+    ],
+  },
+  {
+    title: "Advertising & Programmatic Advertising",
+    hours: 3,
+    detail:
+      "Advertising fundamentals, campaign objectives, audience targeting, ad formats, creative strategy and media planning. Then programmatic advertising fundamentals — campaign budgeting, reach, impressions, frequency and performance measurement.",
+    topics: [
+      "Advertising fundamentals & campaign objectives",
+      "Audience targeting and ad formats",
+      "Creative strategy & media planning",
+      "Programmatic advertising fundamentals",
+      "Budgeting, reach, impressions & frequency",
+      "Performance measurement",
+      "Hands-on: ad campaign plan + programmatic media plan",
     ],
   },
   {
@@ -264,7 +282,7 @@ export const curriculum: CurriculumModule[] = [
   },
   {
     title: "Final Project",
-    hours: 6,
+    hours: 3,
     detail:
       "You assemble the six deliverables — personas + positioning, strategy + budget, paid campaign, content/social plan, SEO recommendations and a performance report — and present them in the final session.",
     topics: [
