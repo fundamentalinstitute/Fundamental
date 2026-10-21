@@ -263,7 +263,7 @@ export const curriculum: CurriculumModule[] = [
     ],
   },
   {
-    title: "Capstone",
+    title: "Final Project",
     hours: 6,
     detail:
       "You assemble the six deliverables — personas + positioning, strategy + budget, paid campaign, content/social plan, SEO recommendations and a performance report — and present them in the final session.",

@@ -173,6 +173,22 @@ const program = defineType({
       ],
     }),
     defineField({ name: "outcomes", title: "What you'll learn", type: "array", of: [{ type: "string" }] }),
+    defineField({
+      name: "curriculumOverline",
+      type: "string",
+      description: 'Small label above the curriculum heading, e.g. "Program learning outcomes and content"',
+    }),
+    defineField({
+      name: "curriculumHeading",
+      type: "string",
+      description: 'Curriculum section heading — last word renders in green, e.g. "What will you learn?"',
+    }),
+    defineField({
+      name: "curriculumIntro",
+      type: "text",
+      rows: 3,
+      description: "Paragraph beside the curriculum heading",
+    }),
     defineField({ name: "internshipRule", type: "text", rows: 3 }),
     defineField({ name: "certificateText", type: "text", rows: 2 }),
     defineField({ name: "image", type: "image", description: "Programs listing card image — 800×300 px" }),

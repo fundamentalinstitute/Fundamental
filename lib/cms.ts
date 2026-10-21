@@ -298,6 +298,9 @@ export interface Program {
   cardPromise: string;
   personas: { title: string; subtitle: string; leavesWith: string }[];
   outcomes: string[];
+  curriculumOverline: string;
+  curriculumHeading: string;
+  curriculumIntro: string;
   internshipRule: string;
   certificateText: string;
   imageUrl: string | null;
@@ -325,6 +328,10 @@ const programFallback: Program = {
     },
   ],
   outcomes: learnOutcomes,
+  curriculumOverline: "Program learning outcomes and content",
+  curriculumHeading: "What will you learn?",
+  curriculumIntro:
+    "A practical curriculum that takes you from marketing foundations to a presented final project — every module ends in hands-on work you can show, not just notes.",
   internshipRule:
     "The top 20% of each batch, selected on weekly assignment scores and capstone review, earn an internship of up to 4 months. Interns work on live client briefs; partner companies are named only with their permission.",
   certificateText:
@@ -334,7 +341,7 @@ const programFallback: Program = {
 
 export async function getProgram(): Promise<Program> {
   const doc = await fetchOr<Partial<Program> | null>(
-    `*[_id == "program"][0]{title, promise, cardPromise, personas, outcomes, internshipRule, certificateText, "imageUrl": image.asset->url}`,
+    `*[_id == "program"][0]{title, promise, cardPromise, personas, outcomes, curriculumOverline, curriculumHeading, curriculumIntro, internshipRule, certificateText, "imageUrl": image.asset->url}`,
     null,
   );
   return { ...programFallback, ...stripNulls(doc ?? {}) };

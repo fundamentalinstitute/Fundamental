@@ -13,27 +13,35 @@ interface Module {
  * Tabbed curriculum: module list on the left, detail panel with overview and
  * topic checklist on the right. Content comes from Sanity (curriculumModule).
  */
-export default function CurriculumExplorer({ modules }: { modules: Module[] }) {
+export default function CurriculumExplorer({
+  modules,
+  overline,
+  heading,
+  intro,
+}: {
+  modules: Module[];
+  overline: string;
+  heading: string;
+  intro: string;
+}) {
   const [active, setActive] = useState(0);
   const m = modules[active];
   const totalHours = modules.reduce((sum, mod) => sum + mod.hours, 0);
+  const headingWords = heading.split(" ");
+  const headingLast = headingWords.pop();
 
   return (
     <div className="flex flex-col gap-8">
       {/* Header row */}
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="overline-label mb-2">Program learning outcomes and content</p>
+          <p className="overline-label mb-2">{overline}</p>
           <h2 className="section-title">
-            What will you <span className="text-brand">learn?</span>
+            {headingWords.join(" ")} <span className="text-brand">{headingLast}</span>
           </h2>
         </div>
         <div className="flex max-w-xl flex-col gap-3">
-          <p className="text-sm leading-relaxed sm:text-base">
-            A practical curriculum that takes you from marketing foundations to
-            a presented capstone — every module ends in hands-on work you can
-            show, not just notes.
-          </p>
+          <p className="text-sm leading-relaxed sm:text-base">{intro}</p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
             <span className="flex items-center gap-2">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4.5 w-4.5 text-brand" aria-hidden>

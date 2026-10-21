@@ -138,7 +138,12 @@ export default async function ProgramPage({
       {/* FOLD 04: CURRICULUM */}
       <Section tone="mist" id="curriculum">
         <div className="flex flex-col gap-5">
-          <CurriculumExplorer modules={modules} />
+          <CurriculumExplorer
+            modules={modules}
+            overline={program.curriculumOverline}
+            heading={program.curriculumHeading}
+            intro={program.curriculumIntro}
+          />
           <Link href="/brochure" className="text-sm font-semibold text-brand hover:underline">
             → Download the full syllabus
           </Link>
