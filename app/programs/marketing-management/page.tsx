@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Section from "@/components/Section";
 import Accordion from "@/components/Accordion";
@@ -184,8 +185,14 @@ export default async function ProgramPage({
       {/* FOLD 07: YOUR INSTRUCTOR */}
       <Section id="instructor">
         <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-center">
-          <div className="flex h-40 w-44 shrink-0 items-center justify-center rounded-lg bg-mist text-xs text-muted">
-            Photo: Anjan
+          <div className="relative h-52 w-full shrink-0 overflow-hidden rounded-xl shadow-md sm:w-64">
+            <Image
+              src={founder.carouselPhotos[0]?.url ?? "/founder/anjan-1.jpg"}
+              alt={`${founder.name}, your instructor`}
+              fill
+              sizes="(min-width: 640px) 16rem, 100vw"
+              className="object-cover object-top"
+            />
           </div>
           <div className="flex flex-1 flex-col gap-3">
             <h2 className="text-xl font-bold">Your instructor</h2>
