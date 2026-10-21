@@ -346,20 +346,21 @@ export interface CurriculumModuleDoc {
   title: string;
   hours: number;
   detail: string;
-  icon: string;
+  topics: string[];
 }
 
 export async function getCurriculum(): Promise<CurriculumModuleDoc[]> {
-  const fallback = fallbackCurriculum.map((m, i) => ({
-    title: m.title.split(": ")[1] ?? m.title,
-    hours: m.hours,
-    detail: m.detail,
-    icon: ["📘", "🎯", "📣", "📊", "🚀"][i] ?? "📘",
-  }));
-  return fetchOr<CurriculumModuleDoc[]>(
-    `*[_type == "curriculumModule"] | order(order asc) {title, hours, detail, icon}`,
-    fallback,
+  const docs = await fetchOr<Partial<CurriculumModuleDoc>[]>(
+    `*[_type == "curriculumModule"] | order(order asc) {title, hours, detail, topics}`,
+    [],
   );
+  if (docs.length === 0) return fallbackCurriculum;
+  return docs.map((d) => ({
+    title: d.title ?? "",
+    hours: d.hours ?? 0,
+    detail: d.detail ?? "",
+    topics: d.topics ?? [],
+  }));
 }
 
 export async function getFaq(

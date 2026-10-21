@@ -7,6 +7,7 @@ import ComparisonTable from "@/components/ComparisonTable";
 import PricingCard from "@/components/PricingCard";
 import FinalCta from "@/components/FinalCta";
 import VideoPlaceholder from "@/components/VideoPlaceholder";
+import CurriculumExplorer from "@/components/CurriculumExplorer";
 import { type BatchMode, discountPct, formatINR } from "@/lib/site-config";
 import {
   getBatches,
@@ -137,21 +138,7 @@ export default async function ProgramPage({
       {/* FOLD 04: CURRICULUM */}
       <Section tone="mist" id="curriculum">
         <div className="flex flex-col gap-5">
-          <h2 className="section-title">
-            The <span className="text-brand">curriculum</span>
-          </h2>
-          <div className="max-w-2xl">
-            <Accordion
-              variant="cards"
-              items={modules.map((m, i) => ({
-                q: m.title,
-                a: m.detail,
-                icon: m.icon || "📘",
-                pill: `Module ${i + 1} · ${m.hours} hrs`,
-              }))}
-            />
-          </div>
-          <p className="text-sm font-semibold">Total: 50 hours</p>
+          <CurriculumExplorer modules={modules} />
           <Link href="/brochure" className="text-sm font-semibold text-brand hover:underline">
             → Download the full syllabus
           </Link>

@@ -149,38 +149,132 @@ export interface CurriculumModule {
   title: string;
   hours: number;
   detail: string;
+  topics: string[];
 }
 
+/** 9 modules, 50 hours total — from "Marketing Management: Curriculum". */
 export const curriculum: CurriculumModule[] = [
   {
-    title: "Module 1 (10 hours): Marketing foundations, the job not the subject",
+    title: "Marketing & Digital Foundations",
+    hours: 6,
+    detail:
+      "What marketing is, the 4 Ps, STP, the customer purchase funnel, and objectives and KPIs. Then the digital ecosystem — organic vs paid, owned/earned/paid media, and how the funnel works in the digital world.",
+    topics: [
+      "What marketing is & the 4 Ps",
+      "STP and the customer purchase funnel",
+      "Objectives and KPIs",
+      "The digital ecosystem: organic vs paid",
+      "Owned, earned and paid media",
+      "Hands-on: map a real brand's funnel",
+    ],
+  },
+  {
+    title: "Audience Research",
+    hours: 4,
+    detail:
+      "Audience research basics, segmentation, persona creation and customer journey mapping — so every decision that follows starts from a real person, not a guess.",
+    topics: [
+      "Audience research basics",
+      "Segmentation",
+      "Persona creation",
+      "Customer journey mapping",
+      "Hands-on: two personas + a journey map",
+    ],
+  },
+  {
+    title: "Brand & Marketing Strategy",
+    hours: 6,
+    detail:
+      "Brand positioning, voice and tone, the strategy framework, channel strategy, campaign planning and budget allocation — the thinking layer that separates marketers from button-pushers.",
+    topics: [
+      "Brand positioning, voice and tone",
+      "The strategy framework",
+      "Channel strategy",
+      "Campaign planning",
+      "Budget allocation",
+      "Hands-on: positioning, channel mix, budget split",
+    ],
+  },
+  {
+    title: "Paid Advertising",
+    hours: 5,
+    detail:
+      "Google Ads fundamentals, keyword research, search campaigns and conversion tracking. Meta Ads objectives and audience targeting, ad creatives with AI tools, budgeting and bidding, and optimisation with a quick intro to A/B testing.",
+    topics: [
+      "Google Ads fundamentals & keyword research",
+      "Search campaigns and conversion tracking",
+      "Meta Ads objectives and audience targeting",
+      "Ad creatives with AI tools",
+      "Budgeting, bidding and A/B testing",
+      "Hands-on: one Google + one Meta campaign",
+    ],
+  },
+  {
+    title: "SEO",
     hours: 10,
     detail:
-      "What marketing actually is inside a company: the roles, the metrics that matter, and the vocabulary interviewers expect. You rebuild your understanding from the hiring side.",
+      "How search works, keyword research with AI tools, on-page SEO, Local SEO and Google Business Profile, and SEO analytics basics — the deepest module in the program.",
+    topics: [
+      "How search works",
+      "Keyword research with AI tools",
+      "On-page SEO",
+      "Local SEO and Google Business Profile",
+      "SEO analytics basics",
+      "Hands-on: SEO audit + recommendations",
+    ],
   },
   {
-    title: "Module 2 (10 hours): Positioning, audience and messaging",
-    hours: 10,
+    title: "Social Media & Content",
+    hours: 6,
     detail:
-      "Segmentation, persona work that isn't fiction, positioning statements and message testing. Ends with a positioning doc for a real business.",
+      "Platform strategy, content pillars, content strategy and calendar, copywriting, content formats and repurposing, and social analytics.",
+    topics: [
+      "Platform strategy and content pillars",
+      "Content strategy and calendar",
+      "Copywriting",
+      "Content formats and repurposing",
+      "Social analytics",
+      "Hands-on: a one-month content calendar",
+    ],
   },
   {
-    title: "Module 3 (12 hours): Channels — paid, owned and earned",
-    hours: 12,
+    title: "Email Marketing & Automation",
+    hours: 3,
     detail:
-      "Meta and Google campaign structure, SEO and content basics, email and WhatsApp journeys. You run live accounts with training budgets.",
+      "Email marketing, lead nurturing, basic automated workflows and an introduction to retargeting.",
+    topics: [
+      "Email marketing and lead nurturing",
+      "Basic automated workflows",
+      "Retargeting introduction",
+      "Hands-on: a welcome / nurture sequence",
+    ],
   },
   {
-    title: "Module 4 (8 hours): Analytics, budgets and reporting",
-    hours: 8,
+    title: "Analytics & Reporting",
+    hours: 4,
     detail:
-      "GA4, pixels and UTM discipline. Reading funnels, building a simple dashboard, and defending a budget in a review meeting.",
+      "Marketing KPIs and metrics, GA4 basics, UTM tracking and reporting formats — so you can prove what worked.",
+    topics: [
+      "Marketing KPIs and metrics",
+      "GA4 basics",
+      "UTM tracking",
+      "Reporting formats",
+      "Hands-on: a performance report",
+    ],
   },
   {
-    title: "Module 5 (10 hours): Capstone — a campaign end to end",
-    hours: 10,
+    title: "Capstone",
+    hours: 6,
     detail:
-      "Brief to launch to report, on a real brand, reviewed live. This is the work you show in interviews and the basis for internship selection.",
+      "You assemble the six deliverables — personas + positioning, strategy + budget, paid campaign, content/social plan, SEO recommendations and a performance report — and present them in the final session.",
+    topics: [
+      "Personas + positioning",
+      "Strategy + budget",
+      "Paid campaign",
+      "Content & social plan",
+      "SEO recommendations",
+      "Final presentation",
+    ],
   },
 ];
 
