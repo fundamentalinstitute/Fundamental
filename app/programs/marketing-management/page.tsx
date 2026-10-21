@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Section from "@/components/Section";
 import Accordion from "@/components/Accordion";
-import Testimonials from "@/components/Testimonials";
 import ComparisonTable from "@/components/ComparisonTable";
 import PricingCard from "@/components/PricingCard";
 import FinalCta from "@/components/FinalCta";
 import VideoPlaceholder from "@/components/VideoPlaceholder";
 import CurriculumExplorer from "@/components/CurriculumExplorer";
+import OutcomeIcon from "@/components/OutcomeIcon";
 import { type BatchMode, discountPct, formatINR } from "@/lib/site-config";
 import {
   getBatches,
@@ -16,7 +16,6 @@ import {
   getFounder,
   getProgram,
   getSettings,
-  getTestimonials,
 } from "@/lib/cms";
 
 export const metadata: Metadata = {
@@ -40,13 +39,12 @@ export default async function ProgramPage({
 }) {
   const { mode } = await searchParams;
   const initialMode: BatchMode = mode === "offline" ? "offline" : "online";
-  const [settings, batches, program, modules, testimonials, faq, founder] =
+  const [settings, batches, program, modules, faq, founder] =
     await Promise.all([
       getSettings(),
       getBatches(),
       getProgram(),
       getCurriculum(),
-      getTestimonials(),
       getFaq("program"),
       getFounder(),
     ]);
@@ -125,9 +123,9 @@ export default async function ProgramPage({
         <div className="flex flex-col gap-5">
           <h2 className="section-title">What you&apos;ll learn</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {program.outcomes.map((o) => (
-              <div key={o} className="card flex flex-col gap-2 p-4">
-                <div className="h-7 w-7 rounded-md bg-brand/10" aria-hidden />
+            {program.outcomes.map((o, i) => (
+              <div key={o} className="card flex flex-col gap-3 p-4">
+                <OutcomeIcon index={i} />
                 <p className="text-sm leading-snug">{o}</p>
               </div>
             ))}
@@ -252,10 +250,7 @@ export default async function ProgramPage({
         </div>
       </Section>
 
-      {/* FOLD 10: TESTIMONIALS */}
-      <Section tone="mist">
-        <Testimonials heading="What earlier mentees say" items={testimonials} />
-      </Section>
+      {/* FOLD 10: TESTIMONIALS — removed until cohort 1 graduates (real quotes only) */}
 
       {/* FOLD 11: PROGRAM FAQS */}
       <Section id="faqs">
