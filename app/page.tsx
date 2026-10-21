@@ -10,7 +10,17 @@ import FounderVideo from "@/components/FounderVideo";
 import VideoPlaceholder from "@/components/VideoPlaceholder";
 import Pillars from "@/components/Pillars";
 import FinalCta from "@/components/FinalCta";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
 import { discountPct, emiFrom, formatINR, proofStats } from "@/lib/site-config";
+import { buildMetadata } from "@/lib/seo";
+
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/",
+    title: "Fundamental Institute — Not a course. A career correction.",
+    description:
+      "Live, practitioner-led Marketing Management program in Pune and online. 50 live hours, small batches, internship for the top 20%.",
+  });
 import {
   getBatches,
   getFaq,
@@ -38,6 +48,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <PageSeoJsonLd path="/" />
       {/* FOLD 01: HERO + CALLBACK FORM */}
       <Section>
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start">

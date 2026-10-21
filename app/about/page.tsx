@@ -1,15 +1,18 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
+import { buildMetadata } from "@/lib/seo";
 import Section from "@/components/Section";
 import Pillars from "@/components/Pillars";
 import FinalCta from "@/components/FinalCta";
 import { getAboutPage, getFounder, getSettings } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "About — the person behind Fundamental",
-  description:
-    "Anjan Prasad built Fundamental to close two gaps: the employability gap and the founder-literacy gap.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/about",
+    title: "About — the person behind Fundamental",
+    description:
+      "Anjan Prasad built Fundamental to close two gaps: the employability gap and the founder-literacy gap.",
+  });
 
 export default async function AboutPage() {
   const [founder, about, settings] = await Promise.all([
@@ -21,6 +24,7 @@ export default async function AboutPage() {
   const photo = founder.aboutPhoto;
   return (
     <>
+      <PageSeoJsonLd path="/about" />
       {/* FOLD 01: THE PERSON BEHIND FUNDAMENTAL */}
       <Section>
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
@@ -124,10 +128,15 @@ export default async function AboutPage() {
       <Section>
         <div className="flex flex-col gap-6 md:flex-row md:items-center">
           <div className="grid flex-1 grid-cols-2 gap-3">
-            {about.studioPhotoUrls.length > 0
-              ? about.studioPhotoUrls.slice(0, 2).map((url) => (
-                  <div key={url} className="relative h-40 overflow-hidden rounded-lg">
-                    <Image src={url} alt="Fundamental studio" fill className="object-cover" />
+            {about.studioPhotos.length > 0
+              ? about.studioPhotos.slice(0, 2).map((p) => (
+                  <div key={p.url} className="relative h-40 overflow-hidden rounded-lg">
+                    <Image
+                      src={p.url}
+                      alt={p.alt ?? "Fundamental studio"}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 ))
               : [1, 2].map((n) => (

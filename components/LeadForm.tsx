@@ -76,7 +76,13 @@ export default function LeadForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: leadType, data }),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        let message = "";
+        try {
+          message = (await res.json())?.error ?? "";
+        } catch {}
+        throw new Error(message || "Request failed");
+      }
       if (inlineSuccess) {
         setDone(true);
       } else {
@@ -86,8 +92,11 @@ export default function LeadForm({
         } catch {}
         router.push(`/thank-you?type=${leadType}`);
       }
-    } catch {
-      setError("Something went wrong. Please try again or ping us on WhatsApp.");
+    } catch (err) {
+      const msg = err instanceof Error && err.message !== "Request failed" ? err.message : "";
+      setError(
+        msg || "Something went wrong. Please try again or ping us on WhatsApp.",
+      );
     } finally {
       setBusy(false);
     }
@@ -105,6 +114,15 @@ export default function LeadForm({
 
   return (
     <form onSubmit={onSubmit} className={`flex flex-col gap-3 ${className ?? ""}`}>
+      {/* Honeypot: hidden from people, tempting to bots. Server drops leads where it's filled. */}
+      <input
+        type="text"
+        name="company_website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       {fields.map((f) => (
         <label key={f.name} className={labelCls}>
           {f.label}
@@ -182,6 +200,12 @@ export default function LeadForm({
             : "btn-primary disabled:opacity-60"
         }
       >
+        {busy && (
+          <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 animate-spin" aria-hidden>
+            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="3" />
+            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+          </svg>
+        )}
         {busy ? "Sending…" : submitLabel}
       </button>
       {error && (

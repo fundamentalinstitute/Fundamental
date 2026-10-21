@@ -1,16 +1,19 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
+import { buildMetadata } from "@/lib/seo";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import FinalCta from "@/components/FinalCta";
 import Image from "next/image";
 import { getPosts } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "Blog — straight talk about careers and marketing",
-  description:
-    "No listicles, no fluff. What hiring managers actually look for, and how to build a career that survives contact with the market.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/blog",
+    title: "Blog — straight talk about careers and marketing",
+    description:
+      "No listicles, no fluff. What hiring managers actually look for, and how to build a career that survives contact with the market.",
+  });
 
 
 export default async function BlogPage() {
@@ -18,6 +21,7 @@ export default async function BlogPage() {
   const categories = ["All", ...new Set(blogPosts.map((p) => p.category))];
   return (
     <>
+      <PageSeoJsonLd path="/blog" />
       {/* FOLD 01: HEADER + CATEGORIES */}
       <Section>
         <div className="flex flex-col gap-4">
@@ -47,7 +51,7 @@ export default async function BlogPage() {
             >
               {p.heroImageUrl ? (
                 <div className="relative h-36 overflow-hidden rounded-md">
-                  <Image src={p.heroImageUrl} alt={p.title} fill className="object-cover" />
+                  <Image src={p.heroImageUrl} alt={p.heroImageAlt ?? p.title} fill className="object-cover" />
                 </div>
               ) : (
                 <div className="flex h-36 items-center justify-center rounded-md bg-mist text-xs text-muted">

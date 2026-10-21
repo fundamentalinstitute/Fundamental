@@ -39,9 +39,50 @@ export async function POST(req: NextRequest) {
   if (!LEAD_TYPES.has(type)) {
     return NextResponse.json({ error: "Unknown lead type" }, { status: 400 });
   }
+
+  /* ── Spam protection & server-side validation ── */
+
+  // Honeypot: bots fill the hidden field; pretend success and drop the lead.
+  if (typeof data.company_website === "string" && data.company_website.trim() !== "") {
+    return NextResponse.json({ ok: true });
+  }
+  delete data.company_website;
+
+  // Size cap: reject oversized payloads outright.
+  if (JSON.stringify(data).length > 8_000) {
+    return NextResponse.json({ error: "Submission too large" }, { status: 400 });
+  }
+  for (const [k, v] of Object.entries(data)) {
+    if (typeof v !== "string" || v.length > 1_000) {
+      return NextResponse.json(
+        { error: `Invalid value for "${k}"` },
+        { status: 400 },
+      );
+    }
+  }
+
   if (!data.email && !data.phone && !data.whatsapp) {
     return NextResponse.json(
       { error: "An email or phone number is required" },
+      { status: 400 },
+    );
+  }
+  if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email)) {
+    return NextResponse.json(
+      { error: "Please enter a valid email address" },
+      { status: 400 },
+    );
+  }
+  const phone = data.phone ?? data.whatsapp;
+  if (phone && !/^\+?\d{10,13}$/.test(phone.replace(/[\s-]/g, ""))) {
+    return NextResponse.json(
+      { error: "Please enter a valid 10-digit mobile number" },
+      { status: 400 },
+    );
+  }
+  if (data.name && !/^[A-Za-z .'’-]{1,100}$/.test(data.name)) {
+    return NextResponse.json(
+      { error: "Please enter a valid name (letters only)" },
       { status: 400 },
     );
   }

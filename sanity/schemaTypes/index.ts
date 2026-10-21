@@ -191,7 +191,7 @@ const program = defineType({
     }),
     defineField({ name: "internshipRule", type: "text", rows: 3 }),
     defineField({ name: "certificateText", type: "text", rows: 2 }),
-    defineField({ name: "image", type: "image", description: "Programs listing card image — 800×300 px" }),
+    defineField({ name: "image", type: "image", description: "Programs listing card image — 800×300 px", fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }),
   ],
 });
 
@@ -243,7 +243,7 @@ const testimonial = defineType({
     defineField({ name: "quote", type: "text", rows: 3 }),
     defineField({ name: "name", type: "string" }),
     defineField({ name: "journey", type: "string", description: "Before → After (role / company)" }),
-    defineField({ name: "photo", type: "image", description: "Square headshot — min 400×400 px" }),
+    defineField({ name: "photo", type: "image", description: "Square headshot — min 400×400 px", fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }),
   ],
 });
 
@@ -258,7 +258,7 @@ const post = defineType({
     defineField({ name: "excerpt", type: "text", rows: 2 }),
     defineField({ name: "readMinutes", type: "number" }),
     defineField({ name: "date", type: "string", description: 'e.g. "2 Oct 2026"' }),
-    defineField({ name: "heroImage", type: "image", description: "2:1 landscape — min 1600×800 px" }),
+    defineField({ name: "heroImage", type: "image", description: "2:1 landscape — min 1600×800 px", fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }),
     defineField({ name: "body", type: "array", of: [{ type: "block" }] }),
   ],
 });
@@ -271,7 +271,7 @@ const leadMagnet = defineType({
     defineField({ name: "title", type: "string" }),
     defineField({ name: "slug", type: "slug", validation: (r) => r.required() }),
     defineField({ name: "bullets", type: "array", of: [{ type: "string" }] }),
-    defineField({ name: "cover", type: "image", description: "Portrait cover — 800×1000 px" }),
+    defineField({ name: "cover", type: "image", description: "Portrait cover — 800×1000 px", fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }),
   ],
 });
 
@@ -310,7 +310,7 @@ const communityPage = defineType({
         },
       ],
     }),
-    defineField({ name: "photo", type: "image", description: "Community/meetup photo — 1200×650 px" }),
+    defineField({ name: "photo", type: "image", description: "Community/meetup photo — 1200×650 px", fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }),
   ],
 });
 
@@ -351,13 +351,49 @@ const aboutPage = defineType({
     defineField({
       name: "studioPhotos",
       type: "array",
-      of: [{ type: "image" }],
+      of: [{ type: "image", fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }],
       description: "Studio gallery — 800×500 px each",
     }),
   ],
 });
 
+const pageSeo = defineType({
+  name: "pageSeo",
+  title: "Page SEO",
+  type: "document",
+  fields: [
+    defineField({
+      name: "path",
+      type: "string",
+      description: 'Page path, e.g. "/", "/about", "/blog/my-post"',
+      validation: (r) => r.required().regex(/^\//, { name: "path starting with /" }),
+    }),
+    defineField({ name: "metaTitle", type: "string", description: "≤ 60 characters" }),
+    defineField({ name: "metaDescription", type: "text", rows: 3, description: "≤ 160 characters" }),
+    defineField({
+      name: "jsonLd",
+      title: "Structured data (JSON-LD)",
+      type: "text",
+      rows: 8,
+      description:
+        "Optional raw JSON-LD object for this page. Must be valid JSON or it is ignored. The site already emits Organization, Course, BlogPosting and FAQPage schema automatically — only add types that are not covered, to avoid duplicates.",
+      validation: (r) =>
+        r.custom((v) => {
+          if (!v) return true;
+          try {
+            JSON.parse(v);
+            return true;
+          } catch {
+            return "Not valid JSON";
+          }
+        }),
+    }),
+  ],
+  preview: { select: { title: "path", subtitle: "metaTitle" } },
+});
+
 export const schemaTypes: SchemaTypeDefinition[] = [
+  pageSeo,
   siteSettings,
   batch,
   homePage,

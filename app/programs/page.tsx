@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
+import { buildMetadata } from "@/lib/seo";
 import Section from "@/components/Section";
 import Accordion from "@/components/Accordion";
 import FinalCta from "@/components/FinalCta";
@@ -7,11 +8,13 @@ import LeadForm from "@/components/LeadForm";
 import { formatINR } from "@/lib/site-config";
 import { getBatches, getFaq, getProgram } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "Programs with certificate",
-  description:
-    "Short, live programs that end with a job-ready portfolio, not just a PDF.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/programs",
+    title: "Programs with certificate",
+    description:
+      "Short, live programs that end with a job-ready portfolio, not just a PDF.",
+  });
 
 const comingSoon = [
   { name: "Business Foundations", meta: "Coming soon · live" },
@@ -26,6 +29,7 @@ export default async function ProgramsPage() {
   ]);
   return (
     <>
+      <PageSeoJsonLd path="/programs" />
       {/* FOLD 01: HEADER */}
       <Section>
         <div className="flex flex-col gap-3">

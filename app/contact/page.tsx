@@ -1,17 +1,22 @@
-import type { Metadata } from "next";
 import Section from "@/components/Section";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
+import { buildMetadata } from "@/lib/seo";
 import LeadForm from "@/components/LeadForm";
 import { getSettings } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Get in touch with Fundamental Institute. We reply within 2 working hours.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/contact",
+    title: "Contact",
+    description:
+      "Get in touch with Fundamental Institute. We reply within 2 working hours.",
+  });
 
 export default async function ContactPage() {
   const settings = await getSettings();
   return (
     <Section>
+      <PageSeoJsonLd path="/contact" />
       <div className="flex flex-col gap-3">
         <h1 className="text-4xl font-bold">Get in touch</h1>
         <p className="text-sm text-muted">We reply within {settings.replyPromise}.</p>

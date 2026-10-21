@@ -1,15 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { buildMetadata } from "@/lib/seo";
 import Section from "@/components/Section";
 import EnrolForm from "@/components/EnrolForm";
 import { type BatchMode } from "@/lib/site-config";
 import { getBatches, getSettings } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "Enrol",
-  description: "Pick your batch and request your seat. A counsellor calls you back with the payment link.",
-  robots: { index: false }, // never in nav; reached from Enrol buttons
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/enrol",
+    title: "Enrol",
+    description:
+      "Pick your batch and request your seat. A counsellor calls you back with the payment link.",
+    noIndex: true, // never in nav; reached from Enrol buttons
+  });
 
 export default async function EnrolPage({
   searchParams,

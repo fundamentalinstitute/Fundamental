@@ -1,20 +1,25 @@
-import type { Metadata } from "next";
+import Image from "next/image";
 import Section from "@/components/Section";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
+import { buildMetadata } from "@/lib/seo";
 import LeadForm from "@/components/LeadForm";
 import Accordion from "@/components/Accordion";
 import { getCommunityPage, getFaq } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "The Founders Club",
-  description:
-    "A free community of founders, working professionals and graduates. City chapters, quarterly meetups, one WhatsApp group that's actually useful.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/community",
+    title: "The Founders Club",
+    description:
+      "A free community of founders, working professionals and graduates. City chapters, quarterly meetups, one WhatsApp group that's actually useful.",
+  });
 
 export default async function CommunityPage() {
   const [page, faq] = await Promise.all([getCommunityPage(), getFaq("community")]);
   const { chapters, perks } = page;
   return (
     <>
+      <PageSeoJsonLd path="/community" />
       {/* FOLD 01: WHAT THE FOUNDERS CLUB IS */}
       <Section>
         <div className="flex flex-col items-start gap-10 lg:flex-row lg:items-center">
@@ -29,9 +34,20 @@ export default async function CommunityPage() {
               Join your chapter
             </a>
           </div>
-          <div className="flex h-52 w-full items-center justify-center rounded-lg bg-mist text-xs text-muted lg:w-96">
-            Community photo / meetup
-          </div>
+          {page.photoUrl ? (
+            <div className="relative h-52 w-full overflow-hidden rounded-lg lg:w-96">
+              <Image
+                src={page.photoUrl}
+                alt={page.photoAlt ?? "Founders Club meetup"}
+                fill
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <div className="flex h-52 w-full items-center justify-center rounded-lg bg-mist text-xs text-muted lg:w-96">
+              Community photo / meetup
+            </div>
+          )}
         </div>
       </Section>
 

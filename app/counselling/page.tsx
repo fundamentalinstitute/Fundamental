@@ -1,14 +1,17 @@
-import type { Metadata } from "next";
 import Section from "@/components/Section";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
+import { buildMetadata } from "@/lib/seo";
 import LeadForm from "@/components/LeadForm";
 import Accordion from "@/components/Accordion";
 import { getFaq, getSettings } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "Talk to a counsellor, free",
-  description:
-    "A free 30-minute call about fit, mode, fees and EMI, and your next steps. We confirm on WhatsApp and send a calendar invite.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/counselling",
+    title: "Talk to a counsellor, free",
+    description:
+      "A free 30-minute call about fit, mode, fees and EMI, and your next steps. We confirm on WhatsApp and send a calendar invite.",
+  });
 
 const steps = [
   { t: "WhatsApp confirmation", d: "We confirm your slot" },
@@ -20,6 +23,7 @@ export default async function CounsellingPage() {
   const [settings, faq] = await Promise.all([getSettings(), getFaq("counselling")]);
   return (
     <>
+      <PageSeoJsonLd path="/counselling" />
       {/* FOLD 01: INTRO + INTAKE FORM */}
       <Section>
         <div className="flex flex-col gap-4">

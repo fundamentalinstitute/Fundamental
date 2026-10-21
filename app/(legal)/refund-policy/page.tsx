@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import Section from "@/components/Section";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Refund policy" };
+export const generateMetadata = () =>
+  buildMetadata({ path: "/refund-policy", title: "Refund policy", description: "Refund terms for Fundamental Institute programs." });
 
 export default function RefundPolicyPage() {
   return (

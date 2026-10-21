@@ -5,7 +5,10 @@ import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import FinalCta from "@/components/FinalCta";
 import Image from "next/image";
+import JsonLd from "@/components/JsonLd";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
 import { getPost, getPosts } from "@/lib/cms";
+import { buildMetadata, SITE_URL } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const posts = await getPosts();
@@ -19,9 +22,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
-  return post
-    ? { title: post.title, description: post.excerpt }
-    : { title: "Article" };
+  if (!post) return { title: "Article" };
+  return buildMetadata({
+    path: `/blog/${post.slug}`,
+    title: post.title,
+    description: post.excerpt,
+    ogImage: post.heroImageUrl ?? "/og.png",
+  });
 }
 
 export default async function ArticlePage({
@@ -38,6 +45,23 @@ export default async function ArticlePage({
 
   return (
     <>
+      <PageSeoJsonLd path={`/blog/${post.slug}`} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt,
+          url: `${SITE_URL}/blog/${post.slug}`,
+          image: post.heroImageUrl ?? `${SITE_URL}/og.png`,
+          author: { "@type": "Person", name: "Anjan Prasad" },
+          publisher: {
+            "@type": "EducationalOrganization",
+            name: "Fundamental Institute",
+            url: SITE_URL,
+          },
+        }}
+      />
       <Section>
         <article className="mx-auto flex max-w-2xl flex-col gap-5">
           <p className="text-xs text-muted">
@@ -51,7 +75,7 @@ export default async function ArticlePage({
           </p>
           {post.heroImageUrl ? (
             <div className="relative h-56 overflow-hidden rounded-lg">
-              <Image src={post.heroImageUrl} alt={post.title} fill className="object-cover" />
+              <Image src={post.heroImageUrl} alt={post.heroImageAlt ?? post.title} fill className="object-cover" />
             </div>
           ) : (
             <div className="flex h-56 items-center justify-center rounded-lg bg-mist text-xs text-muted">

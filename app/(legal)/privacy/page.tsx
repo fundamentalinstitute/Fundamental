@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import Section from "@/components/Section";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Privacy policy" };
+export const generateMetadata = () =>
+  buildMetadata({ path: "/privacy", title: "Privacy policy", description: "How Fundamental Institute collects and uses your data." });
 
 export default function PrivacyPage() {
   return (

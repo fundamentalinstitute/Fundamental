@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Get the full syllabus",
-  description:
-    "The 50-hour curriculum by module, batch schedules and fees, the internship rule and certificate — on WhatsApp within a minute.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/brochure",
+    title: "Get the full syllabus",
+    description:
+      "The 50-hour curriculum by module, batch schedules and fees, the internship rule and certificate — on WhatsApp within a minute.",
+  });
 
 export default function BrochurePage() {
   return (

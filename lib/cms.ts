@@ -402,6 +402,7 @@ interface PostDoc {
   readMinutes: number;
   date: string;
   heroImageUrl?: string | null;
+  heroImageAlt?: string | null;
   body?: { children?: { text?: string }[] }[];
 }
 
@@ -413,14 +414,16 @@ function blocksToParagraphs(body: PostDoc["body"]): string[] {
 
 export interface PostWithImage extends BlogPost {
   heroImageUrl: string | null;
+  heroImageAlt: string | null;
 }
 
 const postsFallback: PostWithImage[] = fallbackPosts.map((p) => ({
   ...p,
   heroImageUrl: null,
+  heroImageAlt: null,
 }));
 
-const POST_PROJECTION = `{title, "slug": slug.current, category, excerpt, readMinutes, date, "heroImageUrl": heroImage.asset->url, body}`;
+const POST_PROJECTION = `{title, "slug": slug.current, category, excerpt, readMinutes, date, "heroImageUrl": heroImage.asset->url, "heroImageAlt": heroImage.alt, body}`;
 
 export async function getPosts(): Promise<PostWithImage[]> {
   const docs = await fetchOr<PostDoc[]>(
@@ -437,6 +440,7 @@ export async function getPosts(): Promise<PostWithImage[]> {
     date: d.date,
     body: blocksToParagraphs(d.body),
     heroImageUrl: d.heroImageUrl ?? null,
+    heroImageAlt: d.heroImageAlt ?? null,
   }));
 }
 
@@ -469,6 +473,7 @@ export interface CommunityPage {
   chapters: { city: string; status: "Live" | "Coming"; head: string; next: string }[];
   perks: { title: string; description: string }[];
   photoUrl: string | null;
+  photoAlt: string | null;
 }
 
 const communityFallback: CommunityPage = {
@@ -483,11 +488,12 @@ const communityFallback: CommunityPage = {
     { title: "First access to founder programs and the fund", description: "Members hear everything first" },
   ],
   photoUrl: null,
+  photoAlt: null,
 };
 
 export async function getCommunityPage(): Promise<CommunityPage> {
   const doc = await fetchOr<Partial<CommunityPage> | null>(
-    `*[_id == "communityPage"][0]{chapters, perks, "photoUrl": photo.asset->url}`,
+    `*[_id == "communityPage"][0]{chapters, perks, "photoUrl": photo.asset->url, "photoAlt": photo.alt}`,
     null,
   );
   return { ...communityFallback, ...stripNulls(doc ?? {}) };
@@ -498,7 +504,7 @@ export async function getCommunityPage(): Promise<CommunityPage> {
 export interface AboutPage {
   problems: { title: string; lead: string; description: string }[];
   values: { title: string; description: string }[];
-  studioPhotoUrls: string[];
+  studioPhotos: { url: string; alt: string | null }[];
 }
 
 const aboutFallback: AboutPage = {
@@ -521,12 +527,12 @@ const aboutFallback: AboutPage = {
     { title: "Accessibility first", description: "Priced and scheduled so working people can actually attend" },
     { title: "Economic impact as the metric", description: "We count careers corrected, not certificates printed" },
   ],
-  studioPhotoUrls: [],
+  studioPhotos: [],
 };
 
 export async function getAboutPage(): Promise<AboutPage> {
   const doc = await fetchOr<Partial<AboutPage> | null>(
-    `*[_id == "aboutPage"][0]{problems, values, "studioPhotoUrls": studioPhotos[].asset->url}`,
+    `*[_id == "aboutPage"][0]{problems, values, "studioPhotos": studioPhotos[]{"url": asset->url, alt}}`,
     null,
   );
   return { ...aboutFallback, ...stripNulls(doc ?? {}) };

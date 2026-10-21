@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import LeadForm from "@/components/LeadForm";
+import CookiePrefsLink from "@/components/CookiePrefsLink";
 import { getSettings } from "@/lib/cms";
 
 const columns = [
@@ -89,6 +90,7 @@ export default async function Footer() {
                 {l.label}
               </Link>
             ))}
+            {col.title === "Legal" && <CookiePrefsLink />}
           </div>
         ))}
       </div>

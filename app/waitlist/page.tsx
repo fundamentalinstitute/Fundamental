@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
 import Image from "next/image";
+import { buildMetadata } from "@/lib/seo";
 import Section from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import VideoPlaceholder from "@/components/VideoPlaceholder";
 import { discountPct, formatINR } from "@/lib/site-config";
 import { getBatches, getFounder, getSettings } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "Join the waitlist",
-  description:
-    "Pre-launch waitlist for Fundamental Institute — training first, community, founder programs and the fund to follow.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/waitlist",
+    title: "Join the waitlist",
+    description:
+      "Pre-launch waitlist for Fundamental Institute — training first, community, founder programs and the fund to follow.",
+  });
 
 /**
  * Pre-launch capture page. Per the wireframe: no nav — logo + WhatsApp only.

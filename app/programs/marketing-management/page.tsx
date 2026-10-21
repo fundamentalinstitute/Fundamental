@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import JsonLd from "@/components/JsonLd";
+import PageSeoJsonLd from "@/components/PageSeoJsonLd";
+import { buildMetadata, SITE_URL } from "@/lib/seo";
 import Section from "@/components/Section";
 import Accordion from "@/components/Accordion";
 import ComparisonTable from "@/components/ComparisonTable";
@@ -19,11 +21,13 @@ import {
   getSettings,
 } from "@/lib/cms";
 
-export const metadata: Metadata = {
-  title: "Marketing Management — 50 live hours, 3 months",
-  description:
-    "Live Marketing Management program in Pune and online. Small batches, weekly real briefs, certificate, internship for the top 20%.",
-};
+export const generateMetadata = () =>
+  buildMetadata({
+    path: "/programs/marketing-management",
+    title: "Marketing Management — 50 live hours, 3 months",
+    description:
+      "Live Marketing Management program in Pune and online. Small batches, weekly real briefs, certificate, internship for the top 20%.",
+  });
 
 const subnav = [
   { href: "#overview", label: "Overview" },
@@ -52,6 +56,48 @@ export default async function ProgramPage({
 
   return (
     <>
+      <PageSeoJsonLd path="/programs/marketing-management" />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Course",
+          name: program.title,
+          description: program.promise,
+          url: `${SITE_URL}/programs/marketing-management`,
+          provider: {
+            "@type": "EducationalOrganization",
+            name: "Fundamental Institute",
+            url: SITE_URL,
+          },
+          hasCourseInstance: (["online", "offline"] as const).map((m) => ({
+            "@type": "CourseInstance",
+            courseMode: m,
+            courseSchedule: {
+              "@type": "Schedule",
+              repeatFrequency: "Weekly",
+              description: batches[m].schedule,
+            },
+            location: m === "offline" ? batches[m].location : undefined,
+            offers: {
+              "@type": "Offer",
+              price: batches[m].offerPrice,
+              priceCurrency: "INR",
+              availability: "https://schema.org/InStock",
+            },
+          })),
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }}
+      />
       {/* STICKY SUB-NAV */}
       <div className="sticky top-16 z-30 border-b border-line bg-white/95 backdrop-blur">
         <div className="container-site flex gap-6 overflow-x-auto py-3 text-sm whitespace-nowrap">

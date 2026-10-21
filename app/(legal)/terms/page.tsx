@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import Section from "@/components/Section";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Terms" };
+export const generateMetadata = () =>
+  buildMetadata({ path: "/terms", title: "Terms", description: "Terms of enrolment and use of the Fundamental Institute website." });
 
 export default function TermsPage() {
   return (
