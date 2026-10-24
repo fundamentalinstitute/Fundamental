@@ -60,6 +60,46 @@ function rateLimited(ip: string) {
   return h.n > 10;
 }
 
+/**
+ * Health check: GET /api/leads reports whether the server can reach Supabase
+ * and the tables exist. Exposes no submission data (RLS blocks all reads).
+ */
+export async function GET() {
+  const supabase = getClient();
+  const host = (() => {
+    try {
+      return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").host;
+    } catch {
+      return "invalid or missing NEXT_PUBLIC_SUPABASE_URL";
+    }
+  })();
+  const base = {
+    supabase_host: host,
+    write_key: process.env.SUPABASE_SERVICE_ROLE_KEY ? "service_role" : "publishable",
+  };
+  if (!supabase) {
+    return NextResponse.json({ ...base, status: "not_configured" }, { status: 503 });
+  }
+  const checks: Record<string, string> = {};
+  for (const table of [
+    "leads",
+    "counselling_enquiries",
+    "program_applications",
+    "founder_waitlist",
+    "notification_subscriptions",
+    "newsletter_subscribers",
+    "contact_submissions",
+  ]) {
+    const { error } = await supabase.from(table).select("id").limit(0);
+    checks[table] = error ? `${error.code ?? ""} ${error.message}`.trim() : "ok";
+  }
+  const healthy = Object.values(checks).every((v) => v === "ok");
+  return NextResponse.json(
+    { ...base, status: healthy ? "ok" : "error", tables: checks },
+    { status: healthy ? 200 : 500 },
+  );
+}
+
 export async function POST(req: NextRequest) {
   let body: { type?: string; data?: Record<string, string> };
   try {
