@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { sendAdminNotification } from "@/lib/notify";
 
 /**
  * Lead capture endpoint. The browser never talks to Supabase directly —
@@ -338,6 +339,16 @@ export async function POST(req: NextRequest) {
           : "publishable",
       },
       { status: 500 },
+    );
+  }
+
+  // Admin email — fires once, only after the Supabase save above succeeded.
+  // A duplicate newsletter/notify signup ("already_subscribed") sends nothing.
+  if (subStatus !== "already_subscribed") {
+    await sendAdminNotification(
+      type,
+      { ...data, ...(source ? { source_page: source } : {}) },
+      reference,
     );
   }
 
