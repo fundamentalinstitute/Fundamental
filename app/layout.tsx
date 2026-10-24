@@ -7,25 +7,29 @@ import WhatsAppFloater from "@/components/WhatsAppFloater";
 import JsonLd from "@/components/JsonLd";
 import CookieConsent from "@/components/CookieConsent";
 import { getAnnouncement, getSettings } from "@/lib/cms";
-import { SITE_NAME, SITE_URL } from "@/lib/seo";
+import { SITE_NAME, SITE_URL, getSeoDefaults } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: "Fundamental Institute — Not a course. A career correction.",
-    template: "%s | Fundamental Institute",
-  },
-  description:
-    "Live, practitioner-led Marketing Management program in Pune and online. 50 live hours, small batches, internship for the top 20%.",
-  openGraph: {
-    siteName: SITE_NAME,
-    type: "website",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: SITE_NAME }],
-  },
-  twitter: { card: "summary_large_image", images: ["/og.png"] },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  // Site-wide SEO defaults are editable in Sanity → Site settings.
+  const seo = await getSeoDefaults();
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: seo.seoTitle,
+      template: "%s | Fundamental Institute",
+    },
+    description: seo.seoDescription,
+    ...(seo.seoKeywords.length ? { keywords: seo.seoKeywords } : {}),
+    openGraph: {
+      siteName: SITE_NAME,
+      type: "website",
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: SITE_NAME }],
+    },
+    twitter: { card: "summary_large_image", images: ["/og.png"] },
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -51,6 +55,15 @@ export default async function RootLayout({
               addressLocality: "Pune",
               addressCountry: "IN",
             },
+            // Social profiles (Sanity → Site settings → socials) strengthen
+            // the knowledge-graph entity for SEO and AI answer engines.
+            ...(settings.socials.filter((s) => s.url && s.url !== "#").length
+              ? {
+                  sameAs: settings.socials
+                    .filter((s) => s.url && s.url !== "#")
+                    .map((s) => s.url),
+                }
+              : {}),
           }}
         />
         <Header announcement={announcement} />
