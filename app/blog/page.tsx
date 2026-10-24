@@ -84,6 +84,26 @@ export default async function BlogPage() {
         </div>
       </Section>
 
+      {/* NEWSLETTER */}
+      <Section tone="mist">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-lg font-bold">Get new articles in your inbox</h2>
+            <p className="text-sm text-muted">
+              One email when we publish. No spam, unsubscribe anytime.
+            </p>
+          </div>
+          <div className="w-full max-w-sm">
+            <LeadForm
+              leadType="newsletter"
+              fields={[{ name: "email", label: "Email", type: "email", required: true }]}
+              submitLabel="Subscribe"
+              inlineSuccess="You're subscribed. See you in your inbox."
+            />
+          </div>
+        </div>
+      </Section>
+
       <FinalCta />
     </>
   );

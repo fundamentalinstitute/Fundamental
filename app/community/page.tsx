@@ -100,6 +100,7 @@ export default async function CommunityPage() {
           <div className="card w-full lg:max-w-md">
             <LeadForm
               leadType="community"
+              openWhatsApp
               fields={[
                 { name: "name", label: "Name", required: true },
                 {

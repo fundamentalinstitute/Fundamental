@@ -29,6 +29,7 @@ export default function BrochurePage() {
         <div className="card w-full md:max-w-md">
           <LeadForm
             leadType="brochure"
+            openWhatsApp
             fields={[
               { name: "name", label: "Name", required: true },
               { name: "phone", label: "Phone", type: "tel", required: true },
