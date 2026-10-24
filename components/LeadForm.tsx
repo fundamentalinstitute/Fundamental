@@ -80,7 +80,7 @@ export default function LeadForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: leadType, data }),
       });
-      let resBody: { reference?: string } = {};
+      let resBody: { reference?: string; whatsapp_message?: string } = {};
       if (!res.ok) {
         let message = "";
         try {
@@ -99,13 +99,16 @@ export default function LeadForm({
       // WhatsApp opens ONLY after the database save above succeeded. The
       // thank-you page shows a visible "Open WhatsApp" fallback (fi_wa_url)
       // in case the popup is blocked — the saved record is never lost.
-      if (openWhatsApp) {
-        const msg = buildLeadMessage(leadType, data, resBody.reference);
-        if (msg) {
-          const url = whatsappUrl(msg);
-          try {
-            sessionStorage.setItem("fi_wa_url", url);
-          } catch {}
+      // Prefer the server-resolved (Sanity-edited) message; fall back to the
+      // local defaults so WhatsApp links work even if the CMS was unreachable.
+      const msg =
+        resBody.whatsapp_message ?? buildLeadMessage(leadType, data, resBody.reference);
+      if (msg) {
+        const url = whatsappUrl(msg);
+        try {
+          sessionStorage.setItem("fi_wa_url", url);
+        } catch {}
+        if (openWhatsApp) {
           try {
             window.open(url, "_blank", "noopener,noreferrer");
           } catch {}
