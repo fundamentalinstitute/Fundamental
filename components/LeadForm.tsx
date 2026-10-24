@@ -84,7 +84,11 @@ export default function LeadForm({
       if (!res.ok) {
         let message = "";
         try {
-          message = (await res.json())?.error ?? "";
+          const j = await res.json();
+          message = j?.error ?? "";
+          // Surface the server's diagnostic detail so failures are debuggable
+          // from the page itself (no personal data in it).
+          if (j?.detail) message += ` [${j.detail}${j.supabase_host ? ` · ${j.supabase_host}` : ""}]`;
         } catch {}
         throw new Error(message || "Request failed");
       }

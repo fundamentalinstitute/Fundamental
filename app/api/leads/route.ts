@@ -273,12 +273,30 @@ export async function POST(req: NextRequest) {
       throw logError;
     }
   } catch (err) {
-    console.error(
-      `[leads] Supabase write failed for "${type}":`,
-      err instanceof Error ? err.message : err,
-    );
+    // supabase-js errors are plain objects ({message, code, hint}), not Error.
+    const e = err as { message?: string; code?: string; hint?: string };
+    const detail =
+      [e?.code, e?.message ?? (err instanceof Error ? err.message : undefined), e?.hint]
+        .filter(Boolean)
+        .join(" — ") || String(err);
+    console.error(`[leads] Supabase write failed for "${type}":`, detail);
+    // Surface the underlying cause so misconfiguration (wrong URL, missing
+    // table, RLS) is diagnosable from the browser. No personal data in here.
     return NextResponse.json(
-      { error: "Could not save your submission. Please try again." },
+      {
+        error: "Could not save your submission. Please try again.",
+        detail: detail.slice(0, 300),
+        supabase_host: (() => {
+          try {
+            return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").host;
+          } catch {
+            return "invalid NEXT_PUBLIC_SUPABASE_URL";
+          }
+        })(),
+        write_key: process.env.SUPABASE_SERVICE_ROLE_KEY
+          ? "service_role"
+          : "publishable",
+      },
       { status: 500 },
     );
   }
