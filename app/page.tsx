@@ -101,6 +101,7 @@ export default async function HomePage() {
             <LeadForm
               variant="dark"
               leadType="counselling"
+              openWhatsApp
               fields={[
                 { name: "name", label: "Name", required: true },
                 { name: "phone", label: "Phone", type: "tel", required: true },

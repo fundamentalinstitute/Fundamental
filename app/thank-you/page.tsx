@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Section from "@/components/Section";
 import PersonalHeading from "@/components/PersonalHeading";
+import WhatsAppCta from "@/components/WhatsAppCta";
 import { getSettings, type Settings } from "@/lib/cms";
 
 export const metadata: Metadata = {
@@ -97,9 +98,12 @@ export default async function ThankYouPage({
         <div className="flex flex-wrap justify-center gap-3">
           {c.ctas.map((cta) =>
             cta.href.startsWith("http") ? (
-              <a key={cta.label} href={cta.href} className={cta.primary ? "btn-primary" : "btn-secondary"}>
-                {cta.label}
-              </a>
+              <WhatsAppCta
+                key={cta.label}
+                label={cta.label}
+                fallbackHref={cta.href}
+                primary={cta.primary}
+              />
             ) : (
               <Link key={cta.label} href={cta.href} className={cta.primary ? "btn-primary" : "btn-secondary"}>
                 {cta.label}

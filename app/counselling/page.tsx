@@ -39,6 +39,7 @@ export default async function CounsellingPage() {
               <h2 className="mb-3 text-lg font-bold">Request a call</h2>
               <LeadForm
                 leadType="counselling"
+                openWhatsApp
                 fields={[
                   { name: "name", label: "Name", required: true },
                   { name: "phone", label: "Phone", type: "tel", required: true },

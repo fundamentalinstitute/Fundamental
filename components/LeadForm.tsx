@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { buildLeadMessage, whatsappUrl } from "@/lib/whatsapp";
 
 export interface LeadField {
   name: string;
@@ -21,6 +22,8 @@ interface LeadFormProps {
   inlineSuccess?: string;
   /** Extra data merged into the payload (e.g. preselected batch mode) */
   extra?: Record<string, string>;
+  /** Open WhatsApp with a prefilled message AFTER the record is saved */
+  openWhatsApp?: boolean;
   /** "dark" renders labels/button for a brand-green card background */
   variant?: "light" | "dark";
   className?: string;
@@ -46,6 +49,7 @@ export default function LeadForm({
   note,
   inlineSuccess,
   extra,
+  openWhatsApp,
   variant = "light",
   className,
 }: LeadFormProps) {
@@ -76,6 +80,7 @@ export default function LeadForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: leadType, data }),
       });
+      let resBody: { reference?: string } = {};
       if (!res.ok) {
         let message = "";
         try {
@@ -83,6 +88,30 @@ export default function LeadForm({
         } catch {}
         throw new Error(message || "Request failed");
       }
+      try {
+        resBody = await res.json();
+      } catch {}
+
+      // WhatsApp opens ONLY after the database save above succeeded. The
+      // thank-you page shows a visible "Open WhatsApp" fallback (fi_wa_url)
+      // in case the popup is blocked — the saved record is never lost.
+      if (openWhatsApp) {
+        const msg = buildLeadMessage(leadType, data, resBody.reference);
+        if (msg) {
+          const url = whatsappUrl(msg);
+          try {
+            sessionStorage.setItem("fi_wa_url", url);
+          } catch {}
+          try {
+            window.open(url, "_blank", "noopener,noreferrer");
+          } catch {}
+        }
+      } else {
+        try {
+          sessionStorage.removeItem("fi_wa_url");
+        } catch {}
+      }
+
       if (inlineSuccess) {
         setDone(true);
       } else {

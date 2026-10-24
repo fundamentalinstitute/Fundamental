@@ -58,7 +58,15 @@ export default function EnrolForm({
         <h2 className="mb-3 text-lg font-bold">Your details</h2>
         <LeadForm
           leadType="enrol"
-          extra={{ mode }}
+          openWhatsApp
+          extra={{
+            mode,
+            program: "Marketing Management",
+            schedule: b.schedule,
+            start_date: b.startDate,
+            fee: String(b.offerPrice),
+            location: b.location,
+          }}
           fields={[
             { name: "name", label: "Name", required: true },
             { name: "phone", label: "Phone", type: "tel", required: true },
