@@ -23,6 +23,35 @@ const siteSettings = defineType({
     defineField({ name: "hours", type: "string" }),
     defineField({ name: "replyPromise", type: "string", description: 'e.g. "2 working hours"' }),
     defineField({ name: "applicationDeadline", type: "string", description: 'e.g. "10 Nov 2026"' }),
+    // ── SEO defaults (used site-wide unless a Page SEO document overrides) ──
+    defineField({
+      name: "seoTitle",
+      title: "SEO: default meta title",
+      type: "string",
+      description:
+        'Homepage/default title, ≤ 60 characters. Other pages append " | Fundamental Institute" automatically.',
+    }),
+    defineField({
+      name: "seoDescription",
+      title: "SEO: default meta description",
+      type: "text",
+      rows: 3,
+      description: "Default description for pages without their own, ≤ 160 characters.",
+    }),
+    defineField({
+      name: "seoKeywords",
+      title: "SEO: site keywords",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Brand/program keywords used site-wide and in the llms.txt file read by AI search engines (ChatGPT, Perplexity, Gemini).",
+    }),
+    defineField({
+      name: "seoOgImage",
+      title: "SEO: default social share image",
+      type: "image",
+      description: "Default 1200×630 image for social shares; pages can override it.",
+    }),
     defineField({
       name: "socials",
       type: "array",
@@ -374,6 +403,27 @@ const pageSeo = defineType({
     }),
     defineField({ name: "metaTitle", type: "string", description: "≤ 60 characters" }),
     defineField({ name: "metaDescription", type: "text", rows: 3, description: "≤ 160 characters" }),
+    defineField({
+      name: "keywords",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Optional focus keywords/phrases for this page (meta keywords + AI answer engines).",
+    }),
+    defineField({
+      name: "ogImage",
+      title: "Social share image",
+      type: "image",
+      description:
+        "Shown when this page is shared on WhatsApp/LinkedIn/X. Ideal 1200×630. Falls back to the site default.",
+    }),
+    defineField({
+      name: "noIndex",
+      title: "Hide from search engines",
+      type: "boolean",
+      description: "Turn on to add noindex to this page.",
+      initialValue: false,
+    }),
     defineField({
       name: "jsonLd",
       title: "Structured data (JSON-LD)",
