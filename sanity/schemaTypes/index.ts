@@ -1,4 +1,8 @@
 import { defineField, defineType, type SchemaTypeDefinition } from "sanity";
+import {
+  whatsappMessageDefaults,
+  type WhatsAppMessageKey,
+} from "../../lib/whatsapp-defaults";
 
 /**
  * All site content lives in these types. Singletons (one document each):
@@ -392,9 +396,81 @@ const pageSeo = defineType({
   preview: { select: { title: "path", subtitle: "metaTitle" } },
 });
 
+/**
+ * Prefilled WhatsApp messages, one per form type. Opened on the visitor's
+ * phone after a successful submission — the visitor still presses Send.
+ * Placeholders {{name}}, {{programName}}, {{batchName}}, {{reference}},
+ * {{schedule}}, {{startDate}}, {{location}} and {{fee}} are replaced with the
+ * visitor's actual form values (and removed cleanly when a value is missing).
+ */
+const whatsappMessageField = (
+  name: string,
+  title: string,
+  description: string,
+) =>
+  defineField({
+    name,
+    title,
+    type: "text",
+    rows: 4,
+    description,
+    initialValue: whatsappMessageDefaults[name as WhatsAppMessageKey],
+    validation: (r) => r.max(900),
+  });
+
+const whatsappMessages = defineType({
+  name: "whatsappMessages",
+  title: "WhatsApp messages",
+  type: "document",
+  fields: [
+    whatsappMessageField(
+      "counselling",
+      "Counselling enquiry",
+      "Sent after the free-counselling forms (homepage and /counselling). Placeholders: {{name}}, {{programName}}.",
+    ),
+    whatsappMessageField(
+      "enrolOnline",
+      "Enrolment — Online batch",
+      "Sent after an Online enrolment application. Placeholders: {{name}}, {{programName}}, {{batchName}}, {{schedule}}, {{startDate}}, {{fee}}, {{reference}}.",
+    ),
+    whatsappMessageField(
+      "enrolOffline",
+      "Enrolment — Offline batch",
+      "Sent after an Offline enrolment application. Placeholders: {{name}}, {{programName}}, {{batchName}}, {{schedule}}, {{startDate}}, {{location}}, {{fee}}, {{reference}}.",
+    ),
+    whatsappMessageField(
+      "brochure",
+      "Brochure request",
+      "Sent after the brochure form. Placeholders: {{name}}.",
+    ),
+    whatsappMessageField(
+      "community",
+      "Community signup",
+      "Sent after the Founders Club join form. Placeholders: {{name}}.",
+    ),
+    whatsappMessageField(
+      "contact",
+      "Contact enquiry",
+      "Used for the contact form's WhatsApp link on the thank-you page. Placeholders: {{name}}.",
+    ),
+    whatsappMessageField(
+      "waitlist",
+      "Waitlist",
+      "Used for waitlist signups. Placeholders: {{name}}, {{programName}}.",
+    ),
+    whatsappMessageField(
+      "notify",
+      "Notify Me",
+      "Used for Notify Me signups. Placeholders: {{name}}, {{programName}}.",
+    ),
+  ],
+  preview: { prepare: () => ({ title: "WhatsApp messages" }) },
+});
+
 export const schemaTypes: SchemaTypeDefinition[] = [
   pageSeo,
   siteSettings,
+  whatsappMessages,
   batch,
   homePage,
   founder,

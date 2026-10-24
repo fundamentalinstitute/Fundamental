@@ -547,3 +547,21 @@ function stripNulls<T extends object>(obj: T): Partial<T> {
   }
   return out;
 }
+
+/* ───────────────────────── whatsapp messages ───────────────────────── */
+
+import {
+  whatsappMessageDefaults,
+  type WhatsAppMessageKey,
+} from "@/lib/whatsapp-defaults";
+
+/** Sanity-edited prefilled WhatsApp messages, falling back to the defaults. */
+export async function getWhatsAppMessages(): Promise<
+  Record<WhatsAppMessageKey, string>
+> {
+  const doc = await fetchOr<Partial<Record<WhatsAppMessageKey, string>> | null>(
+    `*[_id == "whatsappMessages"][0]{counselling, enrolOnline, enrolOffline, brochure, community, contact, waitlist, notify}`,
+    null,
+  );
+  return { ...whatsappMessageDefaults, ...stripNulls(doc ?? {}) };
+}

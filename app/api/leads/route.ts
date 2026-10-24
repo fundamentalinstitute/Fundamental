@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { sendAdminNotification } from "@/lib/notify";
+import { buildLeadMessage } from "@/lib/whatsapp";
+import { getWhatsAppMessages } from "@/lib/cms";
 
 /**
  * Lead capture endpoint. The browser never talks to Supabase directly —
@@ -352,9 +354,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Resolve the prefilled WhatsApp message (Sanity-edited, defaults as
+  // fallback) server-side, so the client ships no CMS credentials.
+  let whatsappMessage: string | null = null;
+  try {
+    whatsappMessage = buildLeadMessage(type, data, reference, await getWhatsAppMessages());
+  } catch {
+    whatsappMessage = buildLeadMessage(type, data, reference);
+  }
+
   return NextResponse.json({
     ok: true,
     ...(reference ? { reference } : {}),
     ...(subStatus ? { status: subStatus } : {}),
+    ...(whatsappMessage ? { whatsapp_message: whatsappMessage } : {}),
   });
 }

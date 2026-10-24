@@ -8,6 +8,7 @@ import { apiVersion, dataset, projectId } from "./sanity/env";
 
 const singletons = new Set([
   "siteSettings",
+  "whatsappMessages",
   "homePage",
   "founder",
   "program",
@@ -31,6 +32,7 @@ export default defineConfig({
             // Singletons open the one document directly
             ...[
               ["siteSettings", "Site settings"],
+              ["whatsappMessages", "WhatsApp messages"],
               ["homePage", "Home page"],
               ["founder", "Founder"],
               ["program", "Program"],
