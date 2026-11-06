@@ -14,9 +14,8 @@ import {
  * The defaults in lib/whatsapp-defaults.ts are the fallback when Sanity
  * content cannot be loaded.
  *
- * When NEXT_PUBLIC_WHATSAPP_NUMBER is set we use wa.me/<number>?text=…
- * (prefilled message). Otherwise we fall back to the official short link
- * (wa.link/b4aw8s), which opens the right chat but cannot carry a prefill.
+ * Links use wa.me/<number>?text=… with the configured institute number
+ * (siteConfig.whatsappNumber, overridable via NEXT_PUBLIC_WHATSAPP_NUMBER).
  */
 
 export function whatsappUrl(message?: string): string {

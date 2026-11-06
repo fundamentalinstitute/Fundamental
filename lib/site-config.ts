@@ -9,11 +9,10 @@ export const siteConfig = {
   name: "Fundamental",
   domain: "fundamental.institute",
   email: "hello@fundamental.institute",
-  // Digits-only number (with country code) used to prefill WhatsApp messages
-  // via wa.me. Set NEXT_PUBLIC_WHATSAPP_NUMBER to the number behind wa.link/b4aw8s.
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "",
-  // Official short link — used as-is when no number is configured.
-  whatsappLink: process.env.NEXT_PUBLIC_WHATSAPP_LINK ?? "https://wa.link/b4aw8s",
+  // WhatsApp number with country code; prefilled wa.me links strip the
+  // formatting. NEXT_PUBLIC_WHATSAPP_NUMBER overrides without a code change.
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "+91 81778 54003",
+  whatsappLink: process.env.NEXT_PUBLIC_WHATSAPP_LINK ?? "https://wa.me/918177854003",
   address: "Hinjewadi Studio, Phase 1, Hinjewadi, Pune 411057", // TODO: confirm
   hours: "Mon–Sat, 9 AM to 6 PM", // TODO: confirm
   replyPromise: "2 working hours",
