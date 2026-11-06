@@ -17,8 +17,8 @@ const siteSettings = defineType({
   type: "document",
   fields: [
     defineField({ name: "email", type: "string" }),
-    defineField({ name: "whatsappNumber", type: "string", description: "Display format, e.g. +91 98765 43210" }),
-    defineField({ name: "whatsappLink", type: "url", description: "https://wa.me/91XXXXXXXXXX" }),
+    defineField({ name: "whatsappNumber", type: "string", description: "Display format, e.g. +91 81778 54003" }),
+    defineField({ name: "whatsappLink", type: "url", description: "https://wa.me/918177854003" }),
     defineField({ name: "address", type: "string" }),
     defineField({ name: "hours", type: "string" }),
     defineField({ name: "replyPromise", type: "string", description: 'e.g. "2 working hours"' }),
